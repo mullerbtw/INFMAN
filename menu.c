@@ -19,15 +19,15 @@ int menu(void) // não recebe nenhum valor
    InitWindow(screenWidth, screenHeight, "INF MAN");
    
    // coordinate x first
-   Vector2 titlePosition = {550, 80};
-   Vector2 playPosition = {550, 200};
-   Vector2 leaderboardPosition = {550, 300};
-   Vector2 exitPosition = {550, 400};
+   Vector2 titlePosition = (Vector2) {550, 80};
+   Vector2 playPosition = (Vector2) {550, 200};
+   Vector2 leaderboardPosition = (Vector2) {550, 300};
+   Vector2 exitPosition = (Vector2) {550, 400};
    
-   const char titleText[9] = "INF MAN"; 
-   const char playText[6] = "play";
-   const char leaderboardText[12] = "leaderboard";
-   const char exitText[5] = "exit";
+   const char titleText[9] = {"INF MAN"}; 
+   const char playText[6] = {"play"};
+   const char leaderboardText[12] = {"leaderboard"};
+   const char exitText[5] = {"exit"};
    
    SetTargetFPS(60);
 
@@ -43,7 +43,7 @@ int menu(void) // não recebe nenhum valor
       DrawTextEx(start, leaderboardText, leaderboardPosition, 30, 2, RAYWHITE);
       DrawTextEx(start, exitText, exitPosition, 30, 2, RAYWHITE);
       
-      Rectangle playRec
+      Rectangle playRec = (Rectangle)
       {
          playPosition.x;
          playPosition.y;
@@ -51,7 +51,7 @@ int menu(void) // não recebe nenhum valor
          30;
       };
       
-      Rectangle leaderboardRec
+      Rectangle leaderboardRec = (Rectangle)
       {
          leaderboardPosition.x;
          leaderboardPosition.y;
@@ -59,13 +59,12 @@ int menu(void) // não recebe nenhum valor
          30;
       };
       
-      Rectangle exitRec
+      Rectangle exitRec = (Rectangle)
       {
          exitPosition.x;
          exitPosition.y;
          MeasureTextEx(start, exitText, 30, 2);
          30;
-          
       };
       
       if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
