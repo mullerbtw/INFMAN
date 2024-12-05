@@ -33,26 +33,26 @@ int main() // não recebe nenhum valor
 
       Rectangle playRec = (Rectangle)
       {
-         (screenWidth - MeasureText(playText, 30)) / 2;
-         200;
-         MeasureText(playText, 30);
-         30;
+         (screenWidth - MeasureText(playText, 30)) / 2,
+         200,
+         MeasureText(playText, 30),
+         30
       };
 
       Rectangle leaderboardRec = (Rectangle)
       {
-         (screenWidth - MeasureText(leaderboardText, 30)) / 2;
-         300;
-         MeasureTextEx(start, leaderboardText, 30, 2);
-         30;
+         (screenWidth - MeasureText(leaderboardText, 30)) / 2,
+         300,
+         MeasureTextEx(start, leaderboardText, 30, 2),
+         30
       };
 
       Rectangle exitRec = (Rectangle)
       {
-         (screenWidth - MeasureText(exitText, 30)) / 2;
-         400;
-         MeasureTextEx(start, exitText, 30, 2);
-         30;
+         (screenWidth - MeasureText(exitText, 30)) / 2,
+         400,
+         MeasureTextEx(start, exitText, 30, 2),
+         30
       };
 
       if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
