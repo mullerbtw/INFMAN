@@ -1,11 +1,12 @@
 #include "raylib.h"
+#include <stdio.h>
 
 #define PLAY 1
 #define LEADERBOARD 2
 #define EXIT 3
 
 
-int menu(void) // não recebe nenhum valor
+int menu() // não recebe nenhum valor
 {
    const int screenWidth = 1200;
    const int screenHeight = 600;
@@ -32,7 +33,7 @@ int menu(void) // não recebe nenhum valor
    SetTargetFPS(60);
 
 
-   while(!WindowShouldClose)
+   while(!WindowShouldClose())
    {
       BeginDrawing();
 
@@ -43,7 +44,7 @@ int menu(void) // não recebe nenhum valor
       DrawTextEx(start, leaderboardText, leaderboardPosition, 30, 2, RAYWHITE);
       DrawTextEx(start, exitText, exitPosition, 30, 2, RAYWHITE);
 
-      Rectangle playRec = (Rectangle)
+      /* Rectangle playRec = (Rectangle)
       {
          playPosition.x;
          playPosition.y;
@@ -86,13 +87,14 @@ int menu(void) // não recebe nenhum valor
          // if button pressed on 'exit' area
          {
             return EXIT;
-         }
-      }
+         } */
+       
 
       EndDrawing();
 
    }
 
+
    CloseWindow(); // necessary (?)
    return 0;
-}
+}   
