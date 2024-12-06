@@ -16,7 +16,9 @@ int main() // não recebe nenhum valor
    // const char playText[5] = {"play"};
    // const char leaderboardText[12] = {"leaderboard"};
    // const char exitText[5] = {"exit"};
-
+   
+   Texture2D title = LoadTexture("INFMAN.png");
+   
    SetTargetFPS(60);
 
 
@@ -24,35 +26,35 @@ int main() // não recebe nenhum valor
    {
       BeginDrawing();
 
-      ClearBackground(SKYBLUE);
+      ClearBackground(DARKBLUE);
 
-      DrawText("INF MAN", screenWidth / 2.0f - MeasureText("INF MAN", 80) / 2.0f, 80, 80, RAYWHITE);
-      DrawText("play", screenWidth / 2.0f - MeasureText("play", 40) / 2.0f, 250, 40, RAYWHITE);
-      DrawText("leaderboard", screenWidth / 2.0f - MeasureText("leaderboard", 40) / 2.0f , 350, 40, RAYWHITE);
-      DrawText("exit", screenWidth / 2.0f - MeasureText("exit", 40) / 2.0f, 450, 40, RAYWHITE);
+      DrawTexture(title, screenWidth / 2 - 426 / 2, 100, RAYWHITE);
+      DrawText("PLAY", screenWidth / 2.0f - MeasureText("PLAY", 30) / 2.0f, 280, 30, RAYWHITE);
+      DrawText("LEADERBOARD", screenWidth / 2.0f - MeasureText("LEADERBOARD", 30) / 2.0f , 360, 30, RAYWHITE);
+      DrawText("EXIT", screenWidth / 2.0f - MeasureText("EXIT", 30) / 2.0f, 440, 30, RAYWHITE);
 
       Rectangle playRec = (Rectangle)
       {
-         screenWidth / 2.0f - MeasureText("play", 40) / 2.0f,
-         250,
-         MeasureText("play", 40),
-         40
+         screenWidth / 2.0f - MeasureText("PLAY", 30) / 2.0f,
+         280,
+         MeasureText("PLAY", 30),
+         30
       };
 
       Rectangle leaderboardRec = (Rectangle)
       {
-         screenWidth / 2.0f - MeasureText("leaderboard", 40) / 2.0f,
-         350,
-         MeasureText("leaderboard", 40),
-         40
+         screenWidth / 2.0f - MeasureText("LEADERBOARD", 30) / 2.0f,
+         360,
+         MeasureText("LEADERBOARD", 30),
+         30
       };
 
       Rectangle exitRec = (Rectangle)
       {
-         screenWidth / 2.0f - MeasureText("exit", 40) / 2.0f,
-         450,
-         MeasureText("exit", 40),
-         40
+         screenWidth / 2.0f - MeasureText("EXIT", 30) / 2.0f,
+         440,
+         MeasureText("EXIT", 30),
+         30
       };
 
       if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
@@ -83,6 +85,9 @@ int main() // não recebe nenhum valor
 
    }
    
+   UnloadTexture(title);
+   
    CloseWindow(); // necessary (?)
+   
    return 0;
 }   
