@@ -26,10 +26,10 @@ int main() // não recebe nenhum valor
 
       ClearBackground(SKYBLUE);
 
-      DrawText(titleText,(screenWidth - MeasureText()) / 2, 80, 70, 3, RAYWHITE);
-      DrawText(playText, (screenWidth - MeasureText()) / 2, 200, 30, 2, RAYWHITE);
-      DrawText(leaderboardText, (screenWidth - MeasureText()) / 2, 300, 30, 2, RAYWHITE);
-      DrawText(exitText, (screenWidth - MeasureText()) / 2, 400, 30, 2, RAYWHITE);
+      DrawText("INF MAN", screenWidth - MeasureText(titleText, 80) / 2, 40, 70, WHITE);
+      DrawText(playText, screenWidth - MeasureText(playText, 30) / 2, 100, 30, WHITE);
+      DrawText(leaderboardText, screenWidth - MeasureText(leaderboardText, 30) / 2, 200, 30, WHITE);
+      DrawText(exitText, screenWidth - MeasureText(exitText, 30) / 2, 300, 30, WHITE);
 
       Rectangle playRec = (Rectangle)
       {
@@ -43,7 +43,7 @@ int main() // não recebe nenhum valor
       {
          (screenWidth - MeasureText(leaderboardText, 30)) / 2,
          300,
-         MeasureTextEx(start, leaderboardText, 30, 2),
+         MeasureText(leaderboardText, 30),
          30
       };
 
@@ -51,7 +51,7 @@ int main() // não recebe nenhum valor
       {
          (screenWidth - MeasureText(exitText, 30)) / 2,
          400,
-         MeasureTextEx(start, exitText, 30, 2),
+         MeasureText(exitText, 30),
          30
       };
 
@@ -78,10 +78,9 @@ int main() // não recebe nenhum valor
        
 
       EndDrawing();
+      }
 
    }
-
-
    CloseWindow(); // necessary (?)
    return 0;
 }   
