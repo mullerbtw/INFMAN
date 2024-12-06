@@ -12,10 +12,10 @@ int main() // não recebe nenhum valor
 
    InitWindow(screenWidth, screenHeight, "INF MAN");
 
-   const char titleText[8] = {"INF MAN"}; 
-   const char playText[5] = {"play"};
-   const char leaderboardText[12] = {"leaderboard"};
-   const char exitText[5] = {"exit"};
+   // const char titleText[8] = {"INF MAN"}; 
+   // const char playText[5] = {"play"};
+   // const char leaderboardText[12] = {"leaderboard"};
+   // const char exitText[5] = {"exit"};
 
    SetTargetFPS(60);
 
@@ -26,33 +26,33 @@ int main() // não recebe nenhum valor
 
       ClearBackground(SKYBLUE);
 
-      DrawText("INF MAN", screenWidth - MeasureText(titleText, 80) / 2, 40, 70, WHITE);
-      DrawText(playText, screenWidth - MeasureText(playText, 30) / 2, 100, 30, WHITE);
-      DrawText(leaderboardText, screenWidth - MeasureText(leaderboardText, 30) / 2, 200, 30, WHITE);
-      DrawText(exitText, screenWidth - MeasureText(exitText, 30) / 2, 300, 30, WHITE);
+      DrawText("INF MAN", screenWidth / 2.0f - MeasureText("INF MAN", 80) / 2.0f, 80, 80, RAYWHITE);
+      DrawText("play", screenWidth / 2.0f - MeasureText("play", 40) / 2.0f, 250, 40, RAYWHITE);
+      DrawText("leaderboard", screenWidth / 2.0f - MeasureText("leaderboard", 40) / 2.0f , 350, 40, RAYWHITE);
+      DrawText("exit", screenWidth / 2.0f - MeasureText("exit", 40) / 2.0f, 450, 40, RAYWHITE);
 
       Rectangle playRec = (Rectangle)
       {
-         (screenWidth - MeasureText(playText, 30)) / 2,
-         200,
-         MeasureText(playText, 30),
-         30
+         screenWidth / 2.0f - MeasureText("play", 40) / 2.0f,
+         250,
+         MeasureText("play", 40),
+         40
       };
 
       Rectangle leaderboardRec = (Rectangle)
       {
-         (screenWidth - MeasureText(leaderboardText, 30)) / 2,
-         300,
-         MeasureText(leaderboardText, 30),
-         30
+         screenWidth / 2.0f - MeasureText("leaderboard", 40) / 2.0f,
+         350,
+         MeasureText("leaderboard", 40),
+         40
       };
 
       Rectangle exitRec = (Rectangle)
       {
-         (screenWidth - MeasureText(exitText, 30)) / 2,
-         400,
-         MeasureText(exitText, 30),
-         30
+         screenWidth / 2.0f - MeasureText("exit", 40) / 2.0f,
+         450,
+         MeasureText("exit", 40),
+         40
       };
 
       if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
@@ -76,11 +76,13 @@ int main() // não recebe nenhum valor
             return EXIT;
          }
        
-
-      EndDrawing();
       }
+      
+      EndDrawing();
+      
 
    }
+   
    CloseWindow(); // necessary (?)
    return 0;
 }   
