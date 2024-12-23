@@ -2,7 +2,7 @@ int binaryFileSave(POSICOES leaderboard[NUMJOG])
 {
     FILE *fp;
 
-    fp = fopen("top_score.bin", "wb");
+    fp = fopen("top_scores.bin", "wb");
 
     if(fp != NULL)
     {
