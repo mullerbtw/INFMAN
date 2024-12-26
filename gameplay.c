@@ -4,72 +4,125 @@
 
 int main()
 {
-	const int screenWidth = 1200; // inicializa largura da janela
-    	const int screenHeight = 600; // iniciliza altura da janela
-    
-	InitWindow(screenWidth, screenHeight, "GAMEPLAY"); // inicializa janela
-	Texture2D megaman = LoadTexture("charMoving.png"); // carrega textura de movimento do megaman
-    
-    	unsigned numTiles = 3; // variável para armazenar número de figuras do megaman na charMoving.png
-    
-    	bool megamanMovingRight = false;
-    	bool megamanMovingLeft = false;
-    
-    	float oneWidth = (float)megaman.width / numTiles; // variável para armazenar largura de um dos três desenhos
-    
-	Rectangle frameRec = {0.0f, 0.0f, oneWidth, (float)megaman.height}; // cria retângulo onde fica megaman
-	Vector2 megamanPos = {(screenWidth / 2.0f) - ((oneWidth) / 2), screenHeight / 2.0f}; // vetor para posição do megaman
-    
-	float megamanSpeed = 100; // variável que armazena velocidade (em pixels/second)
-    
-    	SetTargetFPS(60); // setando fps da janela do jogo
+    const int screenWidth = 1200; // inicializa largura da janela
+    const int screenHeight = 600; // iniciliza altura da janela
 
-	while(!WindowShouldClose())
-	{
-        	Vector2 movement = {0, 0};  // vetor de movimento (necessário pra fazer ele andar)
-		
-        	BeginDrawing();
+    InitWindow(screenWidth, screenHeight, "GAMEPLAY"); // inicializa janela
 
-		ClearBackground(WHITE);
+    // tile initialization
+    Texture2D background = LoadTexture("background.png");
+    Texture2D bombLeft = LoadTexture("bombLeft.png");
+    Texture2D bombRight = LoadTexture("bombRight.png");
+    Texture2D box = LoadTexture("box.png");
+    Texture2D megamanClimbing = LoadTexture("megamanClimbing.png");
+    Texture2D megamanDying = LoadTexture("megamanDying.png");
+    Texture2D megamanHurting = LoadTexture("megamanHurting.png");
+    Texture2D megamanJumping = LoadTexture("megamanJumping.png");
+    Texture2D megamanStill = LoadTexture("megamanStill.png");
+    Texture2D megamanTeleporting = LoadTexture("megamanTeleporting.png");
+    Texture2D megamanWalking = LoadTexture("megamanWalking.png"); // carrega textura de movimento do megaman
 
-		DrawTextureRec(megaman, frameRec, megamanPos, WHITE); // desenha textura do megaman
-        
-        	if(IsKeyDown(KEY_W)) // se W estiver apertado, vai pra cima
-        	{
-            		movement.y += -1;
-        	}
-        
-        	if(IsKeyDown(KEY_A)) // se A estiver apertado, vai pra trás
-        	{   
-            		if(frameRec.width > 0)
-                		frameRec.width = -frameRec.width;
-            		movement.x += -1;
-            		frameRec.x += oneWidth;
-            		WaitTime(0.1);
-        	}
-        
-        	if(IsKeyDown(KEY_S)) // se S estiver apertado, vai pra baixo
-        	{
-            		movement.y += 1;
-        	}
-        
-        	if(IsKeyDown(KEY_D)) // se D estiver apertado, vai pra frente
-        	{
-            		if(frameRec.width < 0)
-                		frameRec.width = -frameRec.width;
-            		movement.x += 1;
-            		frameRec.x += oneWidth;
-            		WaitTime(0.1);
-        	}
-        
-        	// esses steps são necessários pra fazer ele andar
-        	Vector2 movementScaling = Vector2Scale(movement, GetFrameTime() * megamanSpeed); // vetor para incrementar posição
-        	megamanPos = Vector2Add(megamanPos, movementScaling); // adds standard vector to the moving one
-        
-		EndDrawing();
-	}
+    // variáveis pra armazenar quantas figuras tem em cada tile
+    unsigned climbingNumTiles = 3;
+    unsigned dyingNumTiles = 3;
+    unsigned hurtingNumTiles = 1;
+    unsigned jumpingNumTiles = 1;
+    unsigned stillNumTiles = 2;
+    unsigned teleportingNumTiles = 2; // but vertically
+    unsigned walkingNumTiles = 3;
 
-	CloseWindow();
+    // variables related to state of the character
+    bool megamanMovingRight = false;
+    bool megamanMovingLeft = false;
 
-	return 0;
+    // variáveis pra armazenar largura de cara tiles do desenhos do megaman
+    float climbingWidth = (float)megamanClimbing.width / climbingNumTiles;
+    float dyingWidth = (float)megamanDying.width / dyingNumTiles;
+    float hurtingWidth = (float)megamanHurting.width / hurtingNumTiles;
+    float jumpingWidth = (float)megamanJumping.width / jumpingNumTiles;
+    float stillWidth = (float)megamanStill.width / stillNumTiles;
+    float teleportingWidth = (float)megamanTeleporting.width / teleportingNumTiles;
+    float walkingWidth = (float)megamanWalking.width / walkingNumTiles;
+
+    float megamanSpeed = 100; // variável que armazena velocidade (em pixels/second)
+
+    // creating megaman texture rectangles
+    Rectangle climbingFrameRec = {0.0f, 0.0f, climbingWidth, (float)megamanClimbing.height};
+    Rectangle dyingFrameRec = {0.0f, 0.0f, dyingWidth, (float)megamanDying.height};
+    Rectangle hurtingFrameRec = {0.0f, 0.0f, hurtingWidth, (float)megamanHurting.height};
+    Rectangle jumpingFrameRec = {0.0f, 0.0f, jumpingWidth, (float)megamanJumping.height};
+    Rectangle stillFrameRec = {0.0f, 0.0f, stillWidth, (float)megamanStill.height};
+    Rectangle teleportingFrameRec = {0.0f, 0.0f, teleportingWidth, (float)megamanTeleporting.height};
+    Rectangle walkingFrameRec = {0.0f, 0.0f, walkingWidth, (float)megamanWalking.height};
+
+    // creating secondary texture rectangles
+    Rectangle backgroundFrameRec = {0.0f, 0.0f, (float)background.width, (float)background.height};
+    Rectangle bombLeftFrameRec = {0.0f, 0.0f, (float)bombLeft.width, (float)bombLeft.height};
+    Rectangle bombRightFrameRec = {0.0f, 0.0f, (float)bombRight.width, (float)bombRight.height};
+    Rectangle boxrameRec = {0.0f, 0.0f, (float)box.width, (float)box.height};
+
+    Vector2 megamanPos = {(screenWidth / 2.0f) - ((walkingWidth) / 2), screenHeight / 2.0f}; // vetor para posição do megaman
+
+    double frameDelay = 0.1;
+
+    SetTargetFPS(60); // setando fps da janela do jogo
+
+    while(!WindowShouldClose())
+    {
+        Vector2 movement = {0, 0};  // vetor de movimento (necessário pra fazer ele andar)
+
+        BeginDrawing();
+
+        ClearBackground(WHITE);
+
+        // DrawTextureRec(megamanStill, stillFrameRec, megamanPos, WHITE); // desenha megamanWalking
+
+        if(IsKeyDown(KEY_W)) // se W estiver apertado, vai pra cima
+        {
+            DrawTextureRec(megamanJumping, jumpingFrameRec, megamanPos, WHITE);
+            movement.y += -1;
+        }
+        else
+            if(IsKeyDown(KEY_A))   // se A estiver apertado, vai pra trás
+            {
+                DrawTextureRec(megamanWalking, walkingFrameRec, megamanPos, WHITE);
+                if(walkingFrameRec.width > 0)
+                    walkingFrameRec.width = -walkingFrameRec.width;
+                movement.x += -1;
+                walkingFrameRec.x += walkingWidth;
+                WaitTime(frameDelay);
+            }
+            else
+                if(IsKeyDown(KEY_S))   // se S estiver apertado, vai pra baixo
+                {
+                    DrawTextureRec(megamanJumping, jumpingFrameRec, megamanPos, WHITE);
+                    movement.y += 1;
+                }
+                else
+                    if(IsKeyDown(KEY_D))   // se D estiver apertado, vai pra frente
+                    {
+                        DrawTextureRec(megamanWalking, walkingFrameRec, megamanPos, WHITE);
+                        if(walkingFrameRec.width < 0)
+                            walkingFrameRec.width = -walkingFrameRec.width;
+                        movement.x += 1;
+                        walkingFrameRec.x += walkingWidth;
+                        WaitTime(frameDelay);
+                    }
+                    else
+                    {
+                        DrawTextureRec(megamanStill, stillFrameRec, megamanPos, WHITE);
+                        stillFrameRec.x += stillWidth;
+                        WaitTime(frameDelay);
+                    }
+
+        // esses steps são necessários pra fazer ele andar
+        Vector2 movementScaling = Vector2Scale(movement, GetFrameTime() * megamanSpeed); // vetor para incrementar posição
+        megamanPos = Vector2Add(megamanPos, movementScaling); // adds standard vector to the moving one
+
+        EndDrawing();
+    }
+
+    CloseWindow();
+
+    return 0;
 }
