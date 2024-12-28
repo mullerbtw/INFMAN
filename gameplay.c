@@ -23,7 +23,7 @@ int main()
     Texture2D megamanHurting = LoadTexture("megamanHurting.png");
     Texture2D megamanJumping = LoadTexture("megamanJumping.png");
     Texture2D megamanShootingMoving = LoadTexture("megamanShootingMoving.png");
-    Texture2D megamanShootingStationary = LoadTexture("megamanShootingStationary");
+    Texture2D megamanShootingStationary = LoadTexture("megamanShootingStationary.png");
     Texture2D megamanStill = LoadTexture("megamanStill.png");
     Texture2D megamanTeleporting = LoadTexture("megamanTeleporting.png");
     Texture2D megamanWalking = LoadTexture("megamanWalking.png"); // carrega textura de movimento do megaman
@@ -90,28 +90,8 @@ int main()
         ClearBackground(WHITE);
 
         // DrawTextureRec(megamanStill, stillFrameRec, megamanPos, WHITE); // desenha megamanWalking
-
-        if(IsKeyDown(KEY_A) && IsKeyDown(KEY_C))
-        {
-            DrawTextureRec(megamanShootingMoving, shootingMovingFrameRec, megamanPos, WHITE);
-            if(shootingMovingFrameRec.width > 0)
-                shootingMovingFrameRec.width = -shootingMovingFrameRec.width;
-            movement.x += -1;
-            shootingMovingFrameRec.x += shootingMovingWidth;
-            WaitTime(frameDelay);
-        }
         
-        else if(IsKeyDown(KEY_D) && IsKeyDown(KEY_C))
-        {
-            DrawTextureRec(megamanShootingMoving, shootingMovingFrameRec, megamanPos, WHITE);
-            if(shootingMovingFrameRec.width < 0)
-                shootingMovingFrameRec.width = -shootingMovingFrameRec.width;
-            movement.x += 1;
-            shootingMovingFrameRec.x += shootingMovingWidth;
-            WaitTime(frameDelay);
-        }
-        
-        else if(IsKeyDown(KEY_A) && IsKeyDown(KEY_W))
+        if(IsKeyDown(KEY_A) && IsKeyDown(KEY_W))
         {
             DrawTextureRec(megamanJumping, jumpingFrameRec, megamanPos, WHITE);
             movement.y += -1;
@@ -137,6 +117,26 @@ int main()
             DrawTextureRec(megamanJumping, jumpingFrameRec, megamanPos, WHITE);
             movement.y += 1;
             movement.x += 1;
+        }
+        
+        else if(IsKeyDown(KEY_A) && IsKeyDown(KEY_C))
+        {
+            DrawTextureRec(megamanShootingMoving, shootingMovingFrameRec, megamanPos, WHITE);
+            if(shootingMovingFrameRec.width > 0)
+                shootingMovingFrameRec.width = -shootingMovingFrameRec.width;
+            movement.x += -1;
+            shootingMovingFrameRec.x += shootingMovingWidth;
+            WaitTime(frameDelay);
+        }
+        
+        else if(IsKeyDown(KEY_D) && IsKeyDown(KEY_C))
+        {
+            DrawTextureRec(megamanShootingMoving, shootingMovingFrameRec, megamanPos, WHITE);
+            if(shootingMovingFrameRec.width < 0)
+                shootingMovingFrameRec.width = -shootingMovingFrameRec.width;
+            movement.x += 1;
+            shootingMovingFrameRec.x += shootingMovingWidth;
+            WaitTime(frameDelay);
         }
         
         else if(IsKeyDown(KEY_W)) // se W estiver apertado, vai pra cima
@@ -173,7 +173,7 @@ int main()
         
         else if(IsKeyDown(KEY_C))
         {
-            DrawTextureRec(megamanShootingMoving, shootingMovingFrameRec, megamanPos, WHITE);
+            DrawTextureRec(megamanShootingStationary, shootingStationaryFrameRec, megamanPos, WHITE);
         }
         
         else
