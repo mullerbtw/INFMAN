@@ -8,12 +8,12 @@ int main()
 {
     const int screenWidth = 1200; // inicializa largura da janela
     const int screenHeight = 600; // inicializa altura da janela
-    
-    const int megamanSpeed = 100; // variável que armazena velocidade (em pixels/second)
-    const float megamanGravity = 0.5; // variável que armazena aceleração
-    
-    const int screenFloor = (2 * screenHeight) / 3; // makes floor 3/4 of the screen height
-    
+
+    const int megamanSpeed = 5; // variável que armazena velocidade (em pixels/second)
+    const int megamanGravity = 1; // variável que armazena aceleração
+
+    const int screenFloor = (2 * screenHeight) / 3; // makes floor 2/3 of the screen height
+
     InitWindow(screenWidth, screenHeight, "GAMEPLAY"); // inicializa janela
 
     // secondary tile initialization
@@ -32,9 +32,12 @@ int main()
     Texture2D megamanStill = LoadTexture("megamanStill.png");
     Texture2D megamanTeleporting = LoadTexture("megamanTeleporting.png");
     Texture2D megamanWalking = LoadTexture("megamanWalking.png"); // carrega textura de movimento do megaman
-
-    int keyDown = 0;
-
+	
+	// for movement
+	unsigned frameDelay = 5;
+	unsigned frameDelayCounter = 0;
+	unsigned frameIndex = 0;
+	
     // variáveis pra armazenar quantas figuras tem em cada tile
     unsigned climbingNumTiles = 3;
     unsigned dyingNumTiles = 3;
@@ -80,8 +83,6 @@ int main()
 
     Vector2 megamanPos = {(screenWidth / 2.0f) - ((walkingWidth) / 2), screenHeight / 2.0f}; // vetor para posição do megaman
     Vector2 megamanMovement = {0, 0};  // vetor de movimento (necessário pra fazer ele andar)
-    
-    double frameDelay = 0.1;
 
     SetTargetFPS(60); // setando fps da janela do jogo
 
@@ -90,45 +91,47 @@ int main()
         BeginDrawing();
 
         ClearBackground(WHITE);
-
-        // DrawTextureRec(megamanStill, stillFrameRec, megamanPos, WHITE); // desenha megamanWalking
         
-        /* if(IsKeyDown(KEY_A) && IsKeyDown(KEY_W))
-        {
-            DrawTextureRec(megamanJumping, jumpingFrameRec, megamanPos, WHITE);
-            megamanMovement.y += -1;
-            megamanMovement.x += -1;
-        }
+        // if(IsKeyDown(KEY_A) && IsKeyDown(KEY_W))
+        // {
+        //     DrawTextureRec(megamanJumping, jumpingFrameRec, megamanPos, WHITE);
+        //     megamanMovement.y = -megamanSpeed;
+        //     megamanMovement.x = -megamanSpeed;
+        // }
         
-        else if(IsKeyDown(KEY_D) && IsKeyDown(KEY_W))
-        {
-            DrawTextureRec(megamanJumping, jumpingFrameRec, megamanPos, WHITE);
-            megamanMovement.y += -1;
-            megamanMovement.x += 1;
-        }
+        // else if(IsKeyDown(KEY_D) && IsKeyDown(KEY_W))
+        // {
+        //     DrawTextureRec(megamanJumping, jumpingFrameRec, megamanPos, WHITE);
+        //     megamanMovement.y = -megamanSpeed;
+        //     megamanMovement.x = megamanSpeed;
+        // }
         
-        else if(IsKeyDown(KEY_A) && IsKeyDown(KEY_S))
-        {
-            DrawTextureRec(megamanJumping, jumpingFrameRec, megamanPos, WHITE);
-            megamanMovement.y += 1;
-            megamanMovement.x += -1;
-        }
+        // else if(IsKeyDown(KEY_A) && IsKeyDown(KEY_S))
+        // {
+        //     DrawTextureRec(megamanJumping, jumpingFrameRec, megamanPos, WHITE);
+        //     megamanMovement.y = megamanSpeed;
+        //     megamanMovement.x += -megamanSpeed;
+        // }
         
-        else if(IsKeyDown(KEY_D) && IsKeyDown(KEY_S))
-        {
-            DrawTextureRec(megamanJumping, jumpingFrameRec, megamanPos, WHITE);
-            megamanMovement.y += 1;
-            megamanMovement.x += 1;
-        }
+        // else if(IsKeyDown(KEY_D) && IsKeyDown(KEY_S))
+        // {
+        //     DrawTextureRec(megamanJumping, jumpingFrameRec, megamanPos, WHITE);
+        //     megamanMovement.y = megamanSpeed;
+        //     megamanMovement.x = megamanSpeed;
+        // }
         
-        else if(IsKeyDown(KEY_A) && IsKeyDown(KEY_C))
+        if(IsKeyDown(KEY_A) && IsKeyDown(KEY_C))
         {
             DrawTextureRec(megamanShootingMoving, shootingMovingFrameRec, megamanPos, WHITE);
             if(shootingMovingFrameRec.width > 0)
                 shootingMovingFrameRec.width = -shootingMovingFrameRec.width;
-            megamanMovement.x += -1;
-            shootingMovingFrameRec.x += shootingMovingWidth;
-            WaitTime(frameDelay);
+            megamanMovement.x = -megamanSpeed;
+            frameDelayCounter++;
+            if(frameDelayCounter >= frameDelay)
+            {
+            	shootingMovingFrameRec.x += shootingMovingWidth;
+            	frameDelayCounter = 0;
+            }
         }
         
         else if(IsKeyDown(KEY_D) && IsKeyDown(KEY_C))
@@ -136,76 +139,78 @@ int main()
             DrawTextureRec(megamanShootingMoving, shootingMovingFrameRec, megamanPos, WHITE);
             if(shootingMovingFrameRec.width < 0)
                 shootingMovingFrameRec.width = -shootingMovingFrameRec.width;
-            megamanMovement.x += 1;
-            shootingMovingFrameRec.x += shootingMovingWidth;
-            WaitTime(frameDelay);
+            megamanMovement.x = megamanSpeed;
+            frameDelayCounter++;
+            if(frameDelayCounter >= frameDelay)
+            {
+            	shootingMovingFrameRec.x += shootingMovingWidth;
+            	frameDelayCounter = 0;
+            }
         }
         
-        else  */
-        if(IsKeyPressed(KEY_W)) // se W estiver apertado, vai pra cima
+        else if(IsKeyPressed(KEY_W)) // se W estiver apertado, vai pra cima
         {
             DrawTextureRec(megamanJumping, jumpingFrameRec, megamanPos, WHITE);
-            
-            megamanMovement.y += -10;
+            megamanMovement.y = - 4 * megamanSpeed + megamanGravity;
         }
-        
-        else if(IsKeyDown(KEY_A)) // se A estiver apertado, vai pra trás
+
+        else if(IsKeyDown(KEY_A) && ((megamanPos.y - megamanWalking.height) >= screenFloor)) // se A estiver apertado, vai pra trás
         {
             DrawTextureRec(megamanWalking, walkingFrameRec, megamanPos, WHITE);
             if(walkingFrameRec.width > 0)
                 walkingFrameRec.width = -walkingFrameRec.width;
-            megamanMovement.x += -1;
-            walkingFrameRec.x += walkingWidth;
-            WaitTime(frameDelay);
+            megamanMovement.x = - megamanSpeed;
+            frameDelayCounter++;
+            if(frameDelayCounter >= frameDelay)
+            {
+            	walkingFrameRec.x += walkingWidth;
+            	frameDelayCounter = 0;
+            }
         }
-        
-        else if(IsKeyDown(KEY_S)) // se S estiver apertado, vai pra baixo
-        {
-            DrawTextureRec(megamanJumping, jumpingFrameRec, megamanPos, WHITE);
-            megamanMovement.y += 1;
-        }
-        
-        else if(IsKeyDown(KEY_D)) // se D estiver apertado, vai pra frente
+
+        // else if(IsKeyDown(KEY_S)) // se S estiver apertado, vai pra baixo
+        // {
+        //     DrawTextureRec(megamanJumping, jumpingFrameRec, megamanPos, WHITE);
+        //     megamanMovement.y = megamanSpeed;
+        // }
+
+        else if(IsKeyDown(KEY_D) && ((megamanPos.y - megamanWalking.height) >= screenFloor)) // se D estiver apertado, vai pra frente
         {
             DrawTextureRec(megamanWalking, walkingFrameRec, megamanPos, WHITE);
             if(walkingFrameRec.width < 0)
                 walkingFrameRec.width = -walkingFrameRec.width;
-            megamanMovement.x += 1;
-            walkingFrameRec.x += walkingWidth;
-            WaitTime(frameDelay);
+            megamanMovement.x = megamanSpeed;
+            frameDelayCounter++;
+            if(frameDelayCounter >= frameDelay)
+            {
+            	walkingFrameRec.x += walkingWidth;
+            	frameDelayCounter = 0;
+            }
         }
-        
-        else if(IsKeyDown(KEY_C))
-        {
-            DrawTextureRec(megamanShootingStationary, shootingStationaryFrameRec, megamanPos, WHITE);
-        }
-        
-        else if(megamanMovement.y != 0)
-        {
-            DrawTextureRec(megamanJumping, jumpingFrameRec, megamanPos, WHITE);
-        }
-        else
+
+        else if((megamanPos.y - megamanWalking.height) >= screenFloor)
         {
             DrawTextureRec(megamanStill, stillFrameRec, megamanPos, WHITE);
-            stillFrameRec.x += stillWidth;
-            WaitTime(frameDelay);
+            megamanMovement.x = 0;
+            frameDelayCounter++;
+            if(frameDelayCounter >= frameDelay)
+            {
+            	stillFrameRec.x += stillWidth;
+            	frameDelayCounter = 0;
+            }
         }
-        
-        // attempt to compensate double jump
-        
-        /* if(IsKeyPressedRepeat(KEY_W))
-        {
-            megamanMovement.y += 10;
-        } */
 
         // esses steps são necessários pra fazer ele andar
-        Vector2 movementScaling = Vector2Scale(megamanMovement, GetFrameTime() * megamanSpeed); // vetor para incrementar posição
-        megamanPos = Vector2Add(megamanPos, movementScaling); // adds standard vector to the moving one
+        megamanPos = Vector2Add(megamanPos, megamanMovement); // adds standard vector to the moving one
         megamanMovement.y += megamanGravity; // adds gravity to the movement vector
         
-        if((megamanPos.y + megamanWalking.height) >= screenFloor)
+        if((megamanPos.y - megamanWalking.height) >= screenFloor)
+        {
             megamanMovement.y = 0;
-        
+            // megamanPos.y = screenFloor;
+        } else
+            DrawTextureRec(megamanJumping, jumpingFrameRec, megamanPos, WHITE);
+
         EndDrawing();
     }
 
