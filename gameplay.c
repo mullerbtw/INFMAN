@@ -3,9 +3,23 @@
 #include <stdbool.h>
 #include "raylib.h"
 #include "raymath.h"
+#include <math.h>
+
+ //estrutura inimigo
+    typedef struct Enemy {
+   Vector2 position;  // Posição atual do inimigo
+    //float speed;       // Velocidade do inimigo
+    Texture2D texture; // Textura do inimigo
+} Enemy;
 
 int main()
 {
+    
+   
+//instancia inimigo
+ 
+   
+
     const int screenWidth = 1200; // inicializa largura da janela
     const int screenHeight = 600; // inicializa altura da janela
 
@@ -21,6 +35,11 @@ int main()
     Texture2D bombLeft = LoadTexture("bombLeft.png");
     Texture2D bombRight = LoadTexture("bombRight.png");
     Texture2D box = LoadTexture("box.png");
+    
+    
+    
+    
+    
 
     // megaman tile initialization
     Texture2D megamanClimbing = LoadTexture("megamanClimbing.png");
@@ -83,42 +102,82 @@ int main()
 
     Vector2 megamanPos = {(screenWidth / 2.0f) - ((walkingWidth) / 2), screenHeight / 2.0f}; // vetor para posição do megaman
     Vector2 megamanMovement = {0, 0};  // vetor de movimento (necessário pra fazer ele andar)
+    
+    
+    Enemy enemy;
+        enemy.position = (Vector2){ 100.0f, 300.0f }; // Posição inicial do inimigo
+        //enemy.speed = 2.0f;                          // Velocidade do inimigo
+        enemy.texture = bombLeft;   
+   
+    
 
     SetTargetFPS(60); // setando fps da janela do jogo
 
     while(!WindowShouldClose())
     {
+        
+          //se megaman estiver perto do inimigo, ele começa a perseguir o megaman. 
+        
+        if (  megamanPos.x - enemy.position.x < 100){
+            
+            enemy.texture = bombLeft; 
+            //inimigo a direita do megaman
+            if (enemy.position.x > megamanPos.x ){
+                
+                enemy.position.x = enemy.position.x - 1;
+                
+       }
+       //inimigo a esquerda do megaman
+        if (enemy.position.x < megamanPos.x ){
+                enemy.texture = bombRight;
+       enemy.position.x = enemy.position.x + 1;
+                
+       }
+            
+        
+        
+        
+        ////acima ou abaixo
+        
+      
+            
+            //inimigo a direita do megaman
+            if (enemy.position.y > megamanPos.y ){
+                
+                enemy.position.y = enemy.position.y - 1;
+                
+       }
+       //inimigo a esquerda do megaman
+        if (enemy.position.y < megamanPos.y ){
+                
+       enemy.position.y = enemy.position.y + 1;
+                
+       }
+            
+        }
+        
+       
+        
+        
         BeginDrawing();
+
+    
+
+
 
         ClearBackground(WHITE);
         
-        // if(IsKeyDown(KEY_A) && IsKeyDown(KEY_W))
-        // {
-        //     DrawTextureRec(megamanJumping, jumpingFrameRec, megamanPos, WHITE);
-        //     megamanMovement.y = -megamanSpeed;
-        //     megamanMovement.x = -megamanSpeed;
-        // }
         
-        // else if(IsKeyDown(KEY_D) && IsKeyDown(KEY_W))
-        // {
-        //     DrawTextureRec(megamanJumping, jumpingFrameRec, megamanPos, WHITE);
-        //     megamanMovement.y = -megamanSpeed;
-        //     megamanMovement.x = megamanSpeed;
-        // }
         
-        // else if(IsKeyDown(KEY_A) && IsKeyDown(KEY_S))
-        // {
-        //     DrawTextureRec(megamanJumping, jumpingFrameRec, megamanPos, WHITE);
-        //     megamanMovement.y = megamanSpeed;
-        //     megamanMovement.x += -megamanSpeed;
-        // }
+        DrawTexture(enemy.texture, enemy.position.x, enemy.position.y, WHITE);
+
+          
         
-        // else if(IsKeyDown(KEY_D) && IsKeyDown(KEY_S))
-        // {
-        //     DrawTextureRec(megamanJumping, jumpingFrameRec, megamanPos, WHITE);
-        //     megamanMovement.y = megamanSpeed;
-        //     megamanMovement.x = megamanSpeed;
-        // }
+
+    
+       
+    
+        
         
         if(IsKeyDown(KEY_A) && IsKeyDown(KEY_C)) // moves to right with shooting position
         {
