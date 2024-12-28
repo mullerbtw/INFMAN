@@ -120,7 +120,7 @@ int main()
         //     megamanMovement.x = megamanSpeed;
         // }
         
-        if(IsKeyDown(KEY_A) && IsKeyDown(KEY_C))
+        if(IsKeyDown(KEY_A) && IsKeyDown(KEY_C)) // moves to right with shooting position
         {
             DrawTextureRec(megamanShootingMoving, shootingMovingFrameRec, megamanPos, WHITE);
             if(shootingMovingFrameRec.width > 0)
@@ -134,7 +134,7 @@ int main()
             }
         }
         
-        else if(IsKeyDown(KEY_D) && IsKeyDown(KEY_C))
+        else if(IsKeyDown(KEY_D) && IsKeyDown(KEY_C)) // moves right with shooting position
         {
             DrawTextureRec(megamanShootingMoving, shootingMovingFrameRec, megamanPos, WHITE);
             if(shootingMovingFrameRec.width < 0)
@@ -148,13 +148,13 @@ int main()
             }
         }
         
-        else if(IsKeyPressed(KEY_W)) // se W estiver apertado, vai pra cima
+        else if(IsKeyPressed(KEY_W)) // se W estiver apertado, pula
         {
-            DrawTextureRec(megamanJumping, jumpingFrameRec, megamanPos, WHITE);
             megamanMovement.y = - 4 * megamanSpeed + megamanGravity;
+            DrawTextureRec(megamanJumping, jumpingFrameRec, megamanPos, WHITE);
         }
 
-        else if(IsKeyDown(KEY_A) && ((megamanPos.y - megamanWalking.height) >= screenFloor)) // se A estiver apertado, vai pra trás
+        else if(IsKeyDown(KEY_A) && ((megamanPos.y - megamanWalking.height) >= screenFloor)) // se A estiver apertado e estiver no chão, vai pra trás
         {
             DrawTextureRec(megamanWalking, walkingFrameRec, megamanPos, WHITE);
             if(walkingFrameRec.width > 0)
@@ -174,7 +174,7 @@ int main()
         //     megamanMovement.y = megamanSpeed;
         // }
 
-        else if(IsKeyDown(KEY_D) && ((megamanPos.y - megamanWalking.height) >= screenFloor)) // se D estiver apertado, vai pra frente
+        else if(IsKeyDown(KEY_D) && ((megamanPos.y - megamanWalking.height) >= screenFloor)) // se D estiver apertado e estiver no chão, vai pra frente
         {
             DrawTextureRec(megamanWalking, walkingFrameRec, megamanPos, WHITE);
             if(walkingFrameRec.width < 0)
@@ -188,6 +188,13 @@ int main()
             }
         }
 
+        else if(IsKeyDown(KEY_C))
+        {
+            DrawTextureRec(megamanShootingStationary, shootingStationaryFrameRec, megamanPos, WHITE);
+            // if(shootingMovingFrameRec.width > 0)
+            //    shootingMovingFrameRec.width = -shootingMovingFrameRec.width;
+        }
+        
         else if((megamanPos.y - megamanWalking.height) >= screenFloor)
         {
             DrawTextureRec(megamanStill, stillFrameRec, megamanPos, WHITE);
