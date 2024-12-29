@@ -1,25 +1,21 @@
+#include "raylib.h"
+#include "raymath.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "raylib.h"
-#include "raymath.h"
 #include <math.h>
 
- //estrutura inimigo
-    typedef struct Enemy {
-   Vector2 position;  // Posição atual do inimigo
-    //float speed;       // Velocidade do inimigo
-    Texture2D texture; // Textura do inimigo
-} Enemy;
+//estrutura inimigo
+typedef struct{
+    Vector2 position; // posição atual do inimigo
+    // float speed; // velocidade do inimigo
+    Texture2D texture; // textura do inimigo
+} ENEMY;
 
 int main()
 {
+    //instancia inimigo
     
-   
-//instancia inimigo
- 
-   
-
     const int screenWidth = 1200; // inicializa largura da janela
     const int screenHeight = 600; // inicializa altura da janela
 
@@ -30,15 +26,15 @@ int main()
 
     InitWindow(screenWidth, screenHeight, "GAMEPLAY"); // inicializa janela
     InitAudioDevice(); //precisa pra tocar audio
+    
     // secondary tile initialization
     Texture2D background = LoadTexture("background.png");
     Texture2D bombLeft = LoadTexture("bombLeft.png");
     Texture2D bombRight = LoadTexture("bombRight.png");
     Texture2D box = LoadTexture("box.png");
     
-    
     //sons
-    Sound dor = LoadSound("man-death-scream-186763.ogg");
+    Sound dor = LoadSound("manDeathScream.ogg");
     SetSoundVolume(dor, 10.0f);
     
 
@@ -104,11 +100,12 @@ int main()
     Vector2 megamanPos = {(screenWidth / 2.0f) - ((walkingWidth) / 2), screenHeight / 2.0f}; // vetor para posição do megaman
     Vector2 megamanMovement = {0, 0};  // vetor de movimento (necessário pra fazer ele andar)
     
-    
-    Enemy enemy;
-        enemy.position = (Vector2){ 100.0f, 300.0f }; // Posição inicial do inimigo
-        //enemy.speed = 2.0f;                          // Velocidade do inimigo
-        enemy.texture = bombLeft;   
+    // enemy struct declaration
+    ENEMY enemy;
+        
+    enemy.position = (Vector2){100.0f, 300.0f}; // posição inicial do inimigo
+    //enemy.speed = 2.0f; // velocidade do inimigo
+    enemy.texture = bombLeft;   
    
     bool soundPlayed = false;
 
@@ -117,72 +114,78 @@ int main()
     while(!WindowShouldClose())
     {
         
-          //se megaman estiver perto do inimigo, ele começa a perseguir o megaman. 
+        // se megaman estiver perto do inimigo, ele começa a perseguir o megaman
         
-        if (  megamanPos.x - enemy.position.x < 100){
-            
+        if (megamanPos.x - enemy.position.x < 100)
+        {
             enemy.texture = bombLeft; 
+            
             //inimigo a direita do megaman
-            if (enemy.position.x > megamanPos.x ){
-                
+            if (enemy.position.x > megamanPos.x )
+            {
                 enemy.position.x = enemy.position.x - 1;
-                
-       }
-       //inimigo a esquerda do megaman
-        if (enemy.position.x < megamanPos.x ){
+            }
+            
+            // inimigo a esquerda do megaman
+            if (enemy.position.x < megamanPos.x)
+            {
                 enemy.texture = bombRight;
-       enemy.position.x = enemy.position.x + 1;
-                
-       }
+                enemy.position.x = enemy.position.x + 1;
+            }
             
+            //acima ou abaixo
         
-        
-        
-        ////acima ou abaixo
-        
-      
-            
             //inimigo a direita do megaman
-            if (enemy.position.y > megamanPos.y ){
-                
-                enemy.position.y = enemy.position.y - 1;
-                
-       }
-       //inimigo a esquerda do megaman
-        if (enemy.position.y < megamanPos.y ){
-                
-       enemy.position.y = enemy.position.y + 1;
-                
-       }
-       
-         if (fabs(enemy.position.x - megamanPos.x) < 10.0f) {
-   
-        PlaySound(dor);  // Toca o som
-     
-    }
+            if (enemy.position.y > megamanPos.y)
+            {
+                enemy.position.y = enemy.position.y - 1;    
+            }
             
+            //inimigo a esquerda do megaman
+            if (enemy.position.y < megamanPos.y )
+            {
+                enemy.position.y = enemy.position.y + 1;    
+            }
+       
+            if (fabs(enemy.position.x - megamanPos.x) < 10.0f)
+            {
+                PlaySound(dor);  // toca o som
+            }
         }
         
-        
-        
         BeginDrawing();
-
-    
-
         
-
         ClearBackground(WHITE);
         
-        
-        
-        DrawTexture(enemy.texture, enemy.position.x, enemy.position.y, WHITE);
+        DrawTexture(enemy.texture, enemy.position.x, enemy.position.y, WHITE); // needs to be DrawTextureRec to facilitate collision recognition
 
-          
-      
-    
-       
-    
+        // if(IsKeyDown(KEY_A) && IsKeyDown(KEY_W))
+        // {
+        //     DrawTextureRec(megamanJumping, jumpingFrameRec, megamanPos, WHITE);
+        //     megamanMovement.y = -megamanSpeed;
+        //     megamanMovement.x = -megamanSpeed;
+        // }
         
+        // else if(IsKeyDown(KEY_D) && IsKeyDown(KEY_W))
+        // {
+        //     DrawTextureRec(megamanJumping, jumpingFrameRec, megamanPos, WHITE);
+        //     megamanMovement.y = -megamanSpeed;
+        //     megamanMovement.x = megamanSpeed;
+        // }
+        
+        // else if(IsKeyDown(KEY_A) && IsKeyDown(KEY_S))
+        // {
+        //     DrawTextureRec(megamanJumping, jumpingFrameRec, megamanPos, WHITE);
+        //     megamanMovement.y = megamanSpeed;
+        //     megamanMovement.x += -megamanSpeed;
+        // }
+        
+        // else if(IsKeyDown(KEY_D) && IsKeyDown(KEY_S))
+        // {
+        //     DrawTextureRec(megamanJumping, jumpingFrameRec, megamanPos, WHITE);
+        //     megamanMovement.y = megamanSpeed;
+        //     megamanMovement.x = megamanSpeed;
+        // }
         
         if(IsKeyDown(KEY_A) && IsKeyDown(KEY_C)) // moves to right with shooting position
         {
@@ -252,11 +255,11 @@ int main()
             }
         }
 
-        else if(IsKeyDown(KEY_C))
+        else if(IsKeyDown(KEY_C) || (IsKeyDown(KEY_C) && ((megamanPos.y - megamanWalking.height) >= screenFloor)))
         {
             DrawTextureRec(megamanShootingStationary, shootingStationaryFrameRec, megamanPos, WHITE);
             // if(shootingMovingFrameRec.width > 0)
-            //    shootingMovingFrameRec.width = -shootingMovingFrameRec.width;
+            // shootingMovingFrameRec.width = -shootingMovingFrameRec.width;
         }
         
         else if((megamanPos.y - megamanWalking.height) >= screenFloor)
@@ -279,11 +282,15 @@ int main()
         {
             megamanMovement.y = 0;
             // megamanPos.y = screenFloor;
-        } else
+        }
+        else if(!IsKeyDown(KEY_C))
+        {
             DrawTextureRec(megamanJumping, jumpingFrameRec, megamanPos, WHITE);
-
+        }
+        
         EndDrawing();
     }
+    
     UnloadSound(dor);
     CloseAudioDevice();
     CloseWindow();
