@@ -95,7 +95,7 @@ int main()
     Rectangle backgroundFrameRec = {0.0f, 0.0f, (float)background.width, (float)background.height};
     Rectangle bombLeftFrameRec = {0.0f, 0.0f, (float)bombLeft.width, (float)bombLeft.height};
     Rectangle bombRightFrameRec = {0.0f, 0.0f, (float)bombRight.width, (float)bombRight.height};
-    Rectangle boxrameRec = {0.0f, 0.0f, (float)box.width, (float)box.height};
+    Rectangle boxFrameRec = {0.0f, 0.0f, (float)box.width, (float)box.height};
 
     Vector2 megamanPos = {(screenWidth / 2.0f) - ((walkingWidth) / 2), screenHeight / 2.0f}; // vetor para posição do megaman
     Vector2 megamanMovement = {0, 0};  // vetor de movimento (necessário pra fazer ele andar)
