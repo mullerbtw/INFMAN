@@ -18,6 +18,8 @@ typedef struct{
 #define MAP_HEIGHT 19
 #define TILE_SIZE 16
 
+///tilemap. 1 = chao. 2 = spike. 0 = nada
+
 int TileMap[MAP_HEIGHT][MAP_WIDTH] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
@@ -169,7 +171,7 @@ int main()
 
     while(!WindowShouldClose())
     {
-        
+        //desenha mapa
       DrawTileMap(TileMap, box, spike);
 
         
