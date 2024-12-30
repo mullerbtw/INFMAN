@@ -90,6 +90,9 @@ int main()
 {
     //instancia inimigo
     
+    bool isdeath = false;
+    
+    
     int correcaoX = 10;
     
     const int screenWidth = 1200 / 2; // inicializa largura da janela
@@ -114,7 +117,8 @@ int main()
 
     Texture2D Tiro = LoadTexture("thinlaser.png"); // carrega textura de movimento do megaman
 
-    
+    Texture2D Morte = LoadTexture("thinlaser.png"); // carrega textura de movimento do megaman
+
     
     //sons
     Sound dor = LoadSound("ai.mp3");
@@ -210,18 +214,11 @@ int main()
 
     while(!WindowShouldClose())
     {
-        
+        if (!isdeath){
       DrawTileMap(TileMap, box, spike);
         
         
-       // if(IsKeyDown(KEY_C){
-             
-             
-             //printf("aosijdaoisjd");
-             //DrawTexture(enemy.texture, enemy.position.x, enemy.position.y, WHITE)
-               // DrawTexture(tiro.textureT, tiro.positionT.x, tiro.positionT.y, WHITE);
-             
-         //}
+     
         
         
         // se megaman estiver perto do inimigo, ele começa a perseguir o megaman
@@ -262,6 +259,8 @@ int main()
                 
                 if (fabs(enemy.position.y - megamanPos.y) < 10.0f)
                 PlaySound(dor);  // toca o som
+                //isdeath = true;
+                //crasha n sei pq
             }
         }
         
@@ -411,6 +410,11 @@ int main()
          
         
         EndDrawing();
+    }else if (isdeath = true){
+        
+        
+        
+    }
     }
     
     UnloadSound(dor);
