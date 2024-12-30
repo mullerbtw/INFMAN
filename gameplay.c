@@ -259,6 +259,8 @@ int main()
        
             if (fabs(enemy.position.x - megamanPos.x) < 10.0f)
             {
+                
+                if (fabs(enemy.position.y - megamanPos.y) < 10.0f)
                 PlaySound(dor);  // toca o som
             }
         }
