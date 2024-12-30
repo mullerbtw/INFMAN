@@ -122,9 +122,11 @@ int main()
     
     //sons
     Sound dor = LoadSound("ai.mp3");
-    
     Sound TiroSound = LoadSound("tiro.mp3");
-
+    Music musica = LoadMusicStream("musica.mp3");
+    
+    
+    
     // megaman tile initialization
     Texture2D megamanClimbing = LoadTexture("megamanClimbing.png");
     Texture2D megamanDying = LoadTexture("megamanDying.png");
@@ -206,14 +208,18 @@ int main()
     enemy.texture = bombLeft;   
    
     bool soundPlayed = false;
-
+    bool playmusic = true;
     SetTargetFPS(60); // setando fps da janela do jogo
     
     
     
+        PlayMusicStream(musica);
 
     while(!WindowShouldClose())
     {
+        UpdateMusicStream(musica);
+      
+        
         if (!isdeath){
       DrawTileMap(TileMap, box, spike);
         
@@ -254,11 +260,18 @@ int main()
                 enemy.position.y = enemy.position.y + 1;    
             }
        
+       
+       
+       ///COLISAO COM INIMIGO
             if (fabs(enemy.position.x - megamanPos.x) < 10.0f)
             {
                 
                 if (fabs(enemy.position.y - megamanPos.y) < 10.0f)
-                PlaySound(dor);  // toca o som
+                PlaySound(dor);
+                //StopMusicStream(musica);
+
+                playmusic = false;
+                // toca o som
                 //isdeath = true;
                 //crasha n sei pq
             }
@@ -402,6 +415,9 @@ int main()
             DrawTextureRec(megamanJumping, jumpingFrameRec, megamanPos, WHITE);
         }
         
+          
+       
+            
         
         
          
@@ -417,6 +433,7 @@ int main()
     }
     }
     
+    UnloadMusicStream(musica);
     UnloadSound(dor);
     CloseAudioDevice();
     CloseWindow();
