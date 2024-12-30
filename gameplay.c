@@ -117,7 +117,7 @@ int main()
     
     
     //sons
-    Sound dor = LoadSound("manDeathScream.ogg");
+    Sound dor = LoadSound("ai.mp3");
     
     Sound TiroSound = LoadSound("tiro.mp3");
 
