@@ -20,6 +20,13 @@ typedef struct{
 
 
 
+typedef struct{
+    Vector2 positionC;
+    Texture2D textureC; 
+} COLISAO;
+
+
+
 #define MAP_WIDTH 39
 #define MAP_HEIGHT 19
 #define TILE_SIZE 16
@@ -85,6 +92,11 @@ int TileMap[MAP_HEIGHT][MAP_WIDTH] = {
     tiroT->positionT.y = megamanPos.y;
 }
 
+void AtualizaColisao(COLISAO *colisao, Vector2 megamanPos) {
+    colisao->positionC.x = megamanPos.x; 
+    colisao->positionC.y = megamanPos.y;
+}
+
 
 int main()
 {
@@ -138,6 +150,7 @@ int main()
     Texture2D megamanTeleporting = LoadTexture("megamanTeleporting.png");
     Texture2D megamanWalking = LoadTexture("megamanWalking.png"); // carrega textura de movimento do megaman
 	
+    Texture2D colisao = LoadTexture("colisao.png"); // carrega textura de movimento do megaman
 
     
     
@@ -188,7 +201,12 @@ int main()
     Rectangle bombLeftFrameRec = {0.0f, 0.0f, (float)bombLeft.width, (float)bombLeft.height};
     Rectangle bombRightFrameRec = {0.0f, 0.0f, (float)bombRight.width, (float)bombRight.height};
     Rectangle boxFrameRec = {0.0f, 0.0f, (float)box.width, (float)box.height};
+    
+    
+    Rectangle colisaoRec = {0.0f, 0.0f, (float)colisao.width, (float)colisao.height};
 
+    
+    
     Vector2 megamanPos = {(screenWidth / 2.0f) - ((walkingWidth) / 2), screenHeight / 2.0f}; // vetor para posição do megaman
     Vector2 megamanMovement = {0, 0};  // vetor de movimento (necessário pra fazer ele andar)
     
@@ -207,6 +225,14 @@ int main()
     //enemy.speed = 2.0f; // velocidade do inimigo
     enemy.texture = bombLeft;   
    
+     
+    COLISAO colisaoMan;
+        
+    colisaoMan.positionC = (Vector2){megamanPos.x, megamanPos.y}; 
+   
+    colisaoMan.textureC = colisao;   
+   
+
     bool soundPlayed = false;
     bool playmusic = true;
     SetTargetFPS(60); // setando fps da janela do jogo
@@ -223,8 +249,10 @@ int main()
         if (!isdeath){
       DrawTileMap(TileMap, box, spike);
         
-        
-     
+       // DrawTexture(colisaoMan.textureC, colisaoMan.positionC.x, colisaoMan.positionC.y, WHITE);
+        DrawTextureRec(colisaoMan.textureC, colisaoRec, colisaoMan.positionC, WHITE);
+        //AtualizaColisao (&, megamanPos);
+        AtualizaColisao (&colisaoMan, megamanPos);
         
         
         // se megaman estiver perto do inimigo, ele começa a perseguir o megaman
