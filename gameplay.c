@@ -101,7 +101,14 @@ int main()
     bomb.texture = (Texture2D) LoadTexture("bomb.png");
     bomb.position = (Vector2) {2 * screenWidth / 3.0f, screenFloor - bomb.texture.height};
     bomb.frameRec = (Rectangle) {0.0f, 0.0f, (float) bomb.texture.width, (float) bomb.texture.height};
-    
+    //bomb.position2 = (Vector2) {0, 0};
+ 
+     ENEMY bomb2;
+    bomb2.texture = (Texture2D) LoadTexture("bomb.png");
+    bomb2.position = (Vector2) {700, 400};
+    bomb2.frameRec = (Rectangle) {0.0f, 0.0f, (float) bomb.texture.width, (float) bomb.texture.height};
+    //bomb.position2 = (Vector2) {0, 0};
+ 
  
     BOX floor;
     floor.texture = LoadTexture("box.png");
@@ -117,6 +124,11 @@ int main()
     camera.zoom = 1.0;
     
     SetTargetFPS(60); // setando fps da janela do jogo
+    
+    
+    
+    
+    
     
     while(!WindowShouldClose())
     {
@@ -251,7 +263,63 @@ int main()
         }
         
         DrawTextureRec(bomb.texture, bomb.frameRec, bomb.position, WHITE); // possibly has to go up
-        
+        DrawTextureRec(bomb2.texture, bomb2.frameRec, bomb2.position, WHITE); // possibly has to go up
+
+        if (megaman.position.x - bomb2.position.x < 100)
+        {
+            // inimigo a direita do megaman
+            if (bomb2.position.x > megaman.position.x)
+            {
+                
+                                bomb2.texture = (Texture2D) LoadTexture("bomb.png");
+
+                bomb2.position.x = bomb2.position.x - 1;
+            }
+
+            // inimigo a esquerda do megaman
+            if (bomb2.position.x < megaman.position.x)
+            {
+                
+                                bomb2.texture = (Texture2D) LoadTexture("bombInvert.png");
+
+                bomb2.position.x = bomb2.position.x + 1;
+            }
+
+            // above or below
+           
+            if (bomb2.position.y > megaman.position.y)
+            {
+                
+               
+                bomb2.position.y = bomb2.position.y - 1;
+            }
+
+            
+            if (bomb2.position.y < megaman.position.y)
+            {
+                
+                                
+                bomb2.position.y = bomb2.position.y + 1;
+            }
+            
+
+            // COLISAO COM INIMIGO
+            if (fabs(bomb2.position.x - megaman.position.x) < 10.0f)
+            {
+                if (fabs(bomb2.position.y - megaman.position.y) < 10.0f)
+                {
+                    DrawText("COLLISION DETECTED", screenWidth / 2 - (MeasureText("COLLISION DETECTED", 20) / 2), screenHeight / 2, 20, RED);
+                    return 0;
+                }
+            }
+        }
+
+
+
+
+
+
+
         if (megaman.position.x - bomb.position.x < 100)
         {
             // inimigo a direita do megaman
