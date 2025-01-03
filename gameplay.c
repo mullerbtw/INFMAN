@@ -5,52 +5,70 @@
 #include <stdbool.h>
 #include <math.h>
 
+#define MATRIXLINES 15
+#define MATRIXCOLUMNS 200
+
 typedef struct
 {
-    Rectangle frameRec;
-    Vector2 position;
-    Vector2 movement;
     Texture2D texture;
+    Vector2 movement;
     unsigned numTiles;
     float width;
     int speed;
     int gravity;
+    Vector2 position;
+    Rectangle frameRec;
 } MEGAMAN;
 
 typedef struct
 {
-    Rectangle frameRec;
-    Vector2 position;
     Texture2D texture;
 } ENEMY;
 
 typedef struct
 {
-    Vector2 position;
+    Texture2D texture;
+} BACKGROUND;
+
+typedef struct
+{
     Texture2D texture;
 } BOX;
 
 typedef struct
 {
-    Rectangle frameRec;
-    Vector2 position;
     Texture2D texture;
-} BACKGROUND;
+} SPIKE;
 
 int main()
 {
+    char matrix[MATRIXLINES][MATRIXCOLUMNS];
+    FILE *fp;
+    if((fp = fopen("matrix.txt", "r")) != NULL)
+    {
+        for (int l = 0; l < MATRIXLINES; l++)
+        {
+            for (int c = 0; c < MATRIXCOLUMNS; c++)
+            {
+                fscanf(fp, "%c", &matrix[l][c]);
+                if (matrix[l][c] == '\n')
+                    matrix[l][c] = ' ';
+            }
+        }
+        fclose(fp);
+    }
+    
     const int screenWidth = 1200;
     const int screenHeight = 600;
-    const int gameWidth = 5432;
-    const int screenFloor = (2 * screenHeight) / 3; // makes floor 2/3 of the screen height
-	const int xStartingPosition = 30;
-    
+    const int gameWidth = 6400;
+    int screenFloor = (screenHeight / 2);
+	int xStartingPosition = 30;
     bool isMegamanJumping = false;
-    
-    InitWindow(screenWidth, screenHeight, "GAMEPLAY"); // inicializa janela
-    
+    bool megamanHitSomething = false;
     unsigned frameDelay = 5;
 	unsigned frameDelayCounter = 0;
+    
+    InitWindow(screenWidth, screenHeight, "GAMEPLAY");
     
     MEGAMAN megaman;
     megaman.texture = (Texture2D) LoadTexture("megamanWalking.png");
@@ -59,48 +77,67 @@ int main()
     megaman.width = (float) ((float) megaman.texture.width / (float) megaman.numTiles);
     megaman.speed = 5;
     megaman.gravity = 1;
-    megaman.position = (Vector2) {xStartingPosition,  screenFloor - megaman.texture.height};
+    megaman.position = (Vector2) {xStartingPosition,  screenFloor - megaman.texture.height}; // or fill with zeros in position
     megaman.frameRec = (Rectangle) {0.0f, 0.0f, megaman.width, (float) megaman.texture.height};
-    
     ENEMY bomb;
-    bomb.texture = (Texture2D) LoadTexture("bomb.png");
-    bomb.position = (Vector2) {2 * screenWidth / 3.0f, screenFloor - bomb.texture.height};
-    bomb.frameRec = (Rectangle) {0.0f, 0.0f, (float) bomb.texture.width, (float) bomb.texture.height};
-    
-    BOX floor;
-    floor.texture = LoadTexture("box.png");
-    floor.position = (Vector2) {0.0f, screenFloor};
-    
+    bomb.texture = LoadTexture("bomb.png");
     BACKGROUND background;
     background.texture = LoadTexture("background.png");
-    
+    BOX floor;
+    floor.texture = LoadTexture("box.png");
+    SPIKE spike;
+    spike.texture = LoadTexture("spike.png");
     Camera2D camera;
     camera.offset = (Vector2) {0, 0};
     camera.target = (Vector2) {megaman.position.x, 0};
     camera.rotation = 0;
     camera.zoom = 1.0;
     
-    SetTargetFPS(60); // setando fps da janela do jogo
+    SetTargetFPS(60);
     
     while(!WindowShouldClose())
     {
         BeginDrawing();
 		ClearBackground(WHITE);
-        
         BeginMode2D(camera);
         
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i <= 9 ; i++)
         {
             DrawTexture(background.texture, i * background.texture.width, 0.0f, WHITE);
         }
         
-        if (IsKeyPressed(KEY_W) && (!isMegamanJumping)) // se W estiver apertado, pula
-        {   
-            megaman.movement.y = -4 * megaman.speed + megaman.gravity; // adds jumps with gravity
-            DrawTextureRec(megaman.texture, megaman.frameRec, megaman.position, WHITE); // draws texture
+        for (int l = 0; l < MATRIXLINES; l++)
+        {
+            for (int c = 0; c < MATRIXCOLUMNS; c++)
+            {
+                if (matrix[l][c] == 'P')
+                {                
+                    // megaman.position = (Vector2)
+                }               
+                if (matrix[l][c] == 'B')
+                {
+                    DrawTexture(floor.texture, (c * floor.texture.width), (l * floor.texture.height), WHITE);
+                }
+                if (matrix[l][c] == 'S')
+                {                
+                    DrawTexture(spike.texture, (c * spike.texture.width), (l * spike.texture.height), WHITE);
+                }   
+                if (matrix[l][c] == 'E')
+                {                
+                    DrawTexture(bomb.texture, (c * bomb.texture.width), (l * bomb.texture.height), WHITE);
+                }
+            }
         }
         
-        else if (IsKeyDown(KEY_A) && ((megaman.position.y - megaman.texture.height) >= screenFloor)) // se A estiver apertado e estiver no chão, vai pra trás
+        if ((megaman.position.x + megaman.texture.width / 3) == screenFloor) // we need to update the screen floor in order to be the tile under character
+            
+        if (IsKeyPressed(KEY_W) && (!isMegamanJumping))
+        {   
+            megaman.movement.y = -4 * megaman.speed + megaman.gravity;
+            DrawTextureRec(megaman.texture, megaman.frameRec, megaman.position, WHITE);
+        }
+        
+        else if (IsKeyDown(KEY_A) && ((megaman.position.y - megaman.texture.height) >= screenFloor))
         {
             isMegamanJumping = false;
             DrawTextureRec(megaman.texture, megaman.frameRec, megaman.position, WHITE);
@@ -114,8 +151,8 @@ int main()
                 frameDelayCounter = 0;
             }
         }
-            
-        else if (IsKeyDown(KEY_D) && ((megaman.position.y - megaman.texture.height) >= screenFloor)) // se D estiver apertado e estiver no chão, vai pra frente
+        
+        else if (IsKeyDown(KEY_D) && ((megaman.position.y - megaman.texture.height) >= screenFloor))
         {
             isMegamanJumping = false;
             DrawTextureRec(megaman.texture, megaman.frameRec, megaman.position, WHITE);
@@ -142,12 +179,12 @@ int main()
         else
         {
             isMegamanJumping = true;
-            DrawTextureRec(megaman.texture, megaman.frameRec, megaman.position, WHITE); // if megaman is in air
+            DrawTextureRec(megaman.texture, megaman.frameRec, megaman.position, WHITE);
+
         }
         
-        // esses steps são necessários pra fazer ele andar
-        megaman.position = Vector2Add(megaman.position, megaman.movement); // adds standard vector to the moving one
-        megaman.movement.y += megaman.gravity; // adds gravity to the movement vector
+        megaman.position = Vector2Add(megaman.position, megaman.movement);
+        megaman.movement.y += megaman.gravity;
 
         // floor correction and movement stop
         if ((megaman.position.y - megaman.texture.height) >= screenFloor) // if megaman is on the floor or under
@@ -166,52 +203,12 @@ int main()
             megaman.position.x = gameWidth - (megaman.texture.width / 3);
         }
         
-        DrawTextureRec(bomb.texture, bomb.frameRec, bomb.position, WHITE); // possibly has to go up
-        
-        if (megaman.position.x - bomb.position.x < 100)
-        {
-            // inimigo a direita do megaman
-            if (bomb.position.x > megaman.position.x)
-            {
-                bomb.position.x = bomb.position.x - 1;
-            }
-
-            // inimigo a esquerda do megaman
-            if (bomb.position.x < megaman.position.x)
-            {
-                bomb.position.x = bomb.position.x + 1;
-            }
-
-            // above or below
-            // inimigo a direita do megaman
-            if (bomb.position.y > megaman.position.y)
-            {
-                bomb.position.y = bomb.position.y - 1;
-            }
-
-            // inimigo a esquerda do megaman
-            if (bomb.position.y < megaman.position.y)
-            {
-                bomb.position.y = bomb.position.y + 1;
-            }
-
-            // COLISAO COM INIMIGO
-            if (fabs(bomb.position.x - megaman.position.x) < 10.0f)
-            {
-                if (fabs(bomb.position.y - megaman.position.y) < 10.0f)
-                {
-                    DrawText("COLLISION DETECTED", screenWidth / 2 - (MeasureText("COLLISION DETECTED", 20) / 2), screenHeight / 2, 20, RED);
-                    return 0;
-                }
-            }
-        }
-        
         if (megaman.position.x <= screenWidth / 2)
         {
             camera.target.x = 0;
             camera.offset.x = 0;
         }
-        // else
+
         if (megaman.position.x >= screenWidth / 2)
         {
             camera.target.x = megaman.position.x;
