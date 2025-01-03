@@ -31,6 +31,8 @@ typedef struct
 {
     Texture2D texture;
     Vector2 position;
+    Rectangle frameRec;
+    
 } BOX;
 
 typedef struct
@@ -80,12 +82,21 @@ int main()
     
     InitAudioDevice();
     Music musica = LoadMusicStream("musica.mp3");
+    
+    
+    Sound tiroSound = LoadSound("tiro.mp3");
+
+    
     const int screenWidth = 1200;
     const int screenHeight = 600;
     const int gameWidth = 6400;
 
 	int xStartingPosition = 30;
     bool isMegamanJumping = false;
+    
+    bool iscoliding = false;
+    
+    
     // bool megamanHitSomething = false;
     unsigned frameDelay = 5;
 	unsigned frameDelayCounter = 0;
@@ -99,17 +110,21 @@ int main()
     megaman.width = (float) ((float) megaman.texture.width / (float) megaman.numTiles);
     megaman.speed = 5;
     megaman.gravity = 1;
+    
+    
+    
     for (int l = 0; l < MATRIXLINES; l++)
     {
         for (int c = 0; c < MATRIXCOLUMNS; c++)
         {
             if (matrix[l][c] == 'P')
             {
-                megaman.position = (Vector2) {(c * megaman.texture.width), (l * megaman.texture.height)};
+                megaman.position = (Vector2) {(c * megaman.texture.width), (l * megaman.texture.height )};
             }
         }
     }
-    megaman.frameRec = (Rectangle) {0.0f, 0.0f, megaman.width, (float) megaman.texture.height};
+    megaman.frameRec = (Rectangle){megaman.position.x, megaman.position.y, megaman.width, megaman.texture.height};
+    
     int screenFloor = megaman.position.y - 200 + megaman.texture.height;
     ENEMY bomb;
     bomb.texture = LoadTexture("bomb.png");
@@ -121,8 +136,50 @@ int main()
     bomb2.frameRec = (Rectangle) {0.0f, 0.0f, (float) bomb.texture.width, (float) bomb.texture.height};
     BACKGROUND background;
     background.texture = LoadTexture("background.png");
+    
+    
+    
+    
+        BOX parede;
+    
+    for (int l = 0; l < MATRIXLINES; l++)
+    {
+        for (int c = 0; c < MATRIXCOLUMNS; c++)
+        {
+            if (matrix[l][c] == 'P')
+            {
+                   parede.frameRec = (Rectangle) {c * parede.texture.width, l * parede.texture.height, parede.texture.width, parede.texture.height};
+
+            }
+        }
+    }
+    
+        parede.texture = LoadTexture("box.png");
+
+    
+    
+    
+    
     BOX floor;
+    
+    for (int l = 0; l < MATRIXLINES; l++)
+    {
+        for (int c = 0; c < MATRIXCOLUMNS; c++)
+        {
+            if (matrix[l][c] == 'P')
+            {
+                   floor.frameRec = (Rectangle) {c * floor.texture.width, l * floor.texture.height, floor.texture.width, floor.texture.height};
+
+            }
+        }
+    }
+
     floor.texture = LoadTexture("box.png");
+    
+       // Rectangle floor.floorRect = {c * floor.texture.width, l * floor.texture.height, floor.texture.width, floor.texture.height};
+
+    
+    
     SPIKE spike;
     spike.texture = LoadTexture("spike.png");
     TIRO tiro;
@@ -159,14 +216,94 @@ int main()
                 }
                 if (matrix[l][c] == 'B')
                 {
+                   
+                    Rectangle megamanRect = {megaman.position.x, megaman.position.y, megaman.width, megaman.texture.height};
+                    Rectangle floorRect = {c * floor.texture.width, l * floor.texture.height, floor.texture.width, floor.texture.height};
+                    if (CheckCollisionRecs(megamanRect, floorRect)){
+                        
+                        iscoliding = true;
+                        
+               // isMegamanJumping = false;
+                printf ("colissao");   
+                //PlaySound(tiroSound);
+                  DrawText("COLLISION ", screenWidth / 2 - (MeasureText("COLLISION DETECTED", 20) / 2), screenHeight / 2, 20, BLACK);
+                  
+                 //////////CHAO
+                if (megaman.movement.y > 0) 
+                {
+                    megaman.position.y = floorRect.y - megaman.texture.height; 
+                    megaman.movement.y = 0; 
+                }
+                if (megaman.movement.y < 0)
+                {
+                    megaman.position.y = floorRect.y + floorRect.height; 
+                   megaman.movement.y = 0; 
+                }
+
+               
+                
+                }else{
+                    
+                    
+                    iscoliding = false;
+                }
+                
+                    
+                    
                     DrawTexture(floor.texture, (c * floor.texture.width), (l * floor.texture.height), WHITE);
                 }
                 if (matrix[l][c] == 'S')
                 {                
                     DrawTexture(spike.texture, (c * spike.texture.width), (l * spike.texture.height), WHITE);
                 }   
+                ////////PAREDE
+                if (matrix[l][c] == 'D')
+                {      
+                 DrawTexture(parede.texture, (c * parede.texture.width), (l * parede.texture.height), RED);
+                 
+                 
+                 
+                 Rectangle megamanRect = {megaman.position.x, megaman.position.y, megaman.width, megaman.texture.height};
+                 Rectangle paredeRect = {c * parede.texture.width, l * parede.texture.height, parede.texture.width, parede.texture.height};
+                 
+                  if (CheckCollisionRecs(megamanRect, paredeRect)){
+                 if (megaman.movement.x < 0) 
+                {
+                    megaman.position.x = paredeRect.x + paredeRect.width; 
+                }
+                 
+                if (megaman.movement.x > 0) 
+                {
+                    megaman.position.x = paredeRect.x - megaman.width;
+                }
+                  }
+                
+                 
+                 
+
+                printf("doh");  
+
+                        
+                    //DrawTexture(spike.texture, (c * spike.texture.width), (l * spike.texture.height), WHITE);
+                }   
+                
+                
+                
+                
             }
         }
+        // COLISAO
+        
+        //if (fabs(Parede1.ParedePos.x - megaman.position.x) < 10.0f){
+
+
+                //megaman.position.x = megaman.position.x + 5;
+          // }
+        
+        
+        
+        
+        
         
         if (IsKeyPressed(KEY_C))
         {
@@ -228,22 +365,32 @@ int main()
                 megaman.frameRec.width = +megaman.frameRec.width;
         }
         
+        
+        
         else
         {
+            
             isMegamanJumping = true;
             DrawTextureRec(megaman.texture, megaman.frameRec, megaman.position, WHITE);
 
         }
         
+        
+        
         megaman.position = Vector2Add(megaman.position, megaman.movement);
         megaman.movement.y += megaman.gravity;
 
-        // floor correction and movement stop
-        if ((megaman.position.y - megaman.texture.height) >= screenFloor) // if megaman is on the floor or under
-        {
-            megaman.movement.y = 0;
-            megaman.position.y = screenFloor + megaman.texture.height; // corrects position to floor
-        }
+
+
+
+
+        //        floor correction and movement stop
+       //if ((iscoliding = false) // if megaman is on the floor or under
+       //{
+        //megaman.movement.y = 0;
+        //megaman.position.y = screenFloor + megaman.texture.height; // corrects position to floor
+       
+        //}
         
         if (megaman.position.x < xStartingPosition - (megaman.texture.width / 6))
         {
