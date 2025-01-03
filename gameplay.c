@@ -211,9 +211,10 @@ int main()
 		{
 			if (collisionFloor() || collisionLeft() || collisionRight())
 			{
-				if (collisionFloor)
+				if (collisionFloor())
 				{
 					megaman.movement.y = 0;
+      megaman.position.y = currentTileY - megaman.texture.height;
 				}
 				else
 				{
