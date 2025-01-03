@@ -61,12 +61,12 @@ int main()
     const int screenWidth = 1200;
     const int screenHeight = 600;
     const int gameWidth = 6400;
-    int screenFloor = (screenHeight / 2);
 	int xStartingPosition = 30;
     bool isMegamanJumping = false;
     bool megamanHitSomething = false;
     unsigned frameDelay = 5;
 	unsigned frameDelayCounter = 0;
+    
     
     InitWindow(screenWidth, screenHeight, "GAMEPLAY");
     
@@ -77,7 +77,16 @@ int main()
     megaman.width = (float) ((float) megaman.texture.width / (float) megaman.numTiles);
     megaman.speed = 5;
     megaman.gravity = 1;
-    megaman.position = (Vector2) {xStartingPosition,  screenFloor - megaman.texture.height}; // or fill with zeros in position
+    for (int l = 0; l < MATRIXLINES; l++)
+    {
+        for (int c = 0; c < MATRIXCOLUMNS; c++)
+        {
+            if (matrix[l][c] == 'P')
+            {
+                megaman.position = (Vector2) {(c * megaman.texture.width), (l * megaman.texture.height)};
+            }
+        }
+    }
     megaman.frameRec = (Rectangle) {0.0f, 0.0f, megaman.width, (float) megaman.texture.height};
     ENEMY bomb;
     bomb.texture = LoadTexture("bomb.png");
@@ -92,6 +101,7 @@ int main()
     camera.target = (Vector2) {megaman.position.x, 0};
     camera.rotation = 0;
     camera.zoom = 1.0;
+    // int screenFloor = megaman.position.y + megaman.texture.height;
     
     SetTargetFPS(60);
     
@@ -110,10 +120,6 @@ int main()
         {
             for (int c = 0; c < MATRIXCOLUMNS; c++)
             {
-                if (matrix[l][c] == 'P')
-                {                
-                    // megaman.position = (Vector2)
-                }               
                 if (matrix[l][c] == 'B')
                 {
                     DrawTexture(floor.texture, (c * floor.texture.width), (l * floor.texture.height), WHITE);
@@ -128,9 +134,7 @@ int main()
                 }
             }
         }
-        
-        if ((megaman.position.x + megaman.texture.width / 3) == screenFloor) // we need to update the screen floor in order to be the tile under character
-            
+                    
         if (IsKeyPressed(KEY_W) && (!isMegamanJumping))
         {   
             megaman.movement.y = -4 * megaman.speed + megaman.gravity;
@@ -203,6 +207,7 @@ int main()
             megaman.position.x = gameWidth - (megaman.texture.width / 3);
         }
         
+        // camera stuff
         if (megaman.position.x <= screenWidth / 2)
         {
             camera.target.x = 0;
