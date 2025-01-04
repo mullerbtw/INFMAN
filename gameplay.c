@@ -8,6 +8,10 @@
 #define MATRIXLINES 15
 #define MATRIXCOLUMNS 200
 
+const int screenWidth = 1200;
+const int screenHeight = 600;
+const int gameWidth = 6400;
+
 typedef struct
 {
 	Texture2D texture;
@@ -123,6 +127,123 @@ void drawBackground(BACKGROUND *background)
         DrawTexture(background->texture, i * background->texture.width, 0.0f, WHITE);
     }
 }
+int bombMovement(ENEMY *bomb, MEGAMAN *megaman)
+{
+    if (megaman->position.x - bomb->position.x < 100)
+		{
+			// inimigo a direita do megaman
+			if (bomb->position.x > megaman->position.x)
+			{
+				bomb->texture = (Texture2D)LoadTexture("bomb.png");
+				bomb->position.x = bomb->position.x - 1;
+			}
+			// inimigo a esquerda do megaman
+			if (bomb->position.x < megaman->position.x)
+			{
+				bomb->texture = (Texture2D)LoadTexture("bombInvert.png");
+				bomb->position.x = bomb->position.x + 1;
+			}
+			// above or below
+			if (bomb->position.y > megaman->position.y)
+			{
+				bomb->position.y = bomb->position.y - 1;
+			}
+			if (bomb->position.y < megaman->position.y)
+			{
+				bomb->position.y = bomb->position.y + 1;
+			}
+			// colisão com inimigo
+			if (fabs(bomb->position.x - megaman->position.x) < 10.0f)
+			{
+				if (fabs(bomb->position.y - megaman->position.y) < 10.0f)
+				{
+					DrawText("COLLISION DETECTED", (screenWidth / 2), (screenHeight / 2), 20, RED);
+					return 0;
+				}
+			}
+		}
+}
+void cameraUpdate(Camera2D *camera, MEGAMAN *megaman)
+{
+    if (megaman->position.x <= screenWidth / 2)
+		{
+			camera->target.x = 0;
+			camera->offset.x = 0;
+		}
+		if (megaman->position.x >= screenWidth / 2)
+		{
+			camera->target.x = megaman->position.x;
+			camera->offset.x = screenWidth / 2 - ((float)megaman->texture.width / 6);
+		}
+		if (megaman->position.x >= (gameWidth - (screenWidth / 2) - (megaman->texture.width / 6)))
+		{
+			camera->target.x = gameWidth - (screenWidth / 2) - (megaman->texture.width / 6);
+		}
+}
+void tileMap(char matrix[][MATRIXCOLUMNS], ENEMY *bomb, MEGAMAN *megaman, BOX *floor, BOX *parede, SPIKE *spike)
+{
+    bool isColliding = false;
+    for (int l = 0; l < MATRIXLINES; l++)
+    {
+        for (int c = 0; c < MATRIXCOLUMNS; c++)
+        {
+            if (matrix[l][c] == 'E')
+            {
+                DrawTexture(bomb->texture, (c * bomb->texture.width), (l * bomb->texture.height), WHITE);
+            }
+            if (matrix[l][c] == 'B')
+            {
+                Rectangle megamanRect = {megaman->position.x, megaman->position.y, megaman->width, megaman->texture.height};
+                Rectangle floorRect = {c * floor->texture.width, l * floor->texture.height, floor->texture.width, floor->texture.height};
+                if (CheckCollisionRecs(megamanRect, floorRect))
+                {
+                    isColliding = true;
+                    printf("COLISÃO");
+                    DrawText("COLLISION", screenWidth / 2 - (MeasureText("COLLISION", 20) / 2), screenHeight / 2, 20, BLACK);
+                    if (megaman->movement.y > 0)
+                    {
+                        megaman->position.y = floorRect.y - megaman->texture.height;
+                        megaman->movement.y = 0;
+                    }
+                    if (megaman->movement.y < 0)
+                    {
+                        megaman->position.y = floorRect.y + floorRect.height;
+                        megaman->movement.y = 0;
+                    }
+                }
+                else
+                {
+                    isColliding = false;
+                }
+
+                DrawTexture(floor->texture, (c * floor->texture.width), (l * floor->texture.height), WHITE);
+            }
+            if (matrix[l][c] == 'S')
+            {
+                DrawTexture(spike->texture, (c * spike->texture.width), (l * spike->texture.height), WHITE);
+            }
+            if (matrix[l][c] == 'D')
+            {
+                DrawTexture(parede->texture, (c * parede->texture.width), (l * parede->texture.height), RED);
+                Rectangle megamanRect = {megaman->position.x, megaman->position.y, megaman->width, megaman->texture.height};
+                Rectangle paredeRect = {c * parede->texture.width, l * parede->texture.height, parede->texture.width, parede->texture.height};
+                if (CheckCollisionRecs(megamanRect, paredeRect))
+                {
+                    if (megaman->movement.x < 0)
+                    {
+                        megaman->position.x = paredeRect.x + paredeRect.width;
+                    }
+
+                    if (megaman->movement.x > 0)
+                    {
+                        megaman->position.x = paredeRect.x - megaman->width;
+                    }
+                }
+                printf("DOH");
+            }
+        }
+    }
+}
 int main()
 {
 	char matrix[MATRIXLINES][MATRIXCOLUMNS];
@@ -130,12 +251,10 @@ int main()
 	InitAudioDevice();
 	Music musica = LoadMusicStream("musica.mp3");
 	Sound tiroSound = LoadSound("tiro.mp3");
-	const int screenWidth = 1200;
-	const int screenHeight = 600;
-	const int gameWidth = 6400;
 	int xStartingPosition = 30;
+    int correcaoX;
 	bool isMegamanJumping = false;
-	bool isColiding = false;
+	// bool isColiding = false;
 	unsigned frameDelay = 5;
 	unsigned frameDelayCounter = 0;
 
@@ -181,72 +300,11 @@ int main()
 	while (!WindowShouldClose())
 	{
 		UpdateMusicStream(musica);
-		int correcaoX;
 		BeginDrawing();
 		ClearBackground(WHITE);
 		BeginMode2D(camera);
         drawBackground(&background);
-		
-		for (int l = 0; l < MATRIXLINES; l++)
-		{
-			for (int c = 0; c < MATRIXCOLUMNS; c++)
-			{
-				if (matrix[l][c] == 'E')
-				{
-					DrawTexture(bomb.texture, (c * bomb.texture.width), (l * bomb.texture.height), WHITE);
-				}
-				if (matrix[l][c] == 'B')
-				{
-					Rectangle megamanRect = {megaman.position.x, megaman.position.y, megaman.width, megaman.texture.height};
-					Rectangle floorRect = {c * floor.texture.width, l * floor.texture.height, floor.texture.width, floor.texture.height};
-					if (CheckCollisionRecs(megamanRect, floorRect))
-					{
-						isColiding = true;
-						printf("COLISÃO");
-						DrawText("COLLISION", screenWidth / 2 - (MeasureText("COLLISION", 20) / 2), screenHeight / 2, 20, BLACK);
-						if (megaman.movement.y > 0)
-						{
-							megaman.position.y = floorRect.y - megaman.texture.height;
-							megaman.movement.y = 0;
-						}
-						if (megaman.movement.y < 0)
-						{
-							megaman.position.y = floorRect.y + floorRect.height;
-							megaman.movement.y = 0;
-						}
-					}
-					else
-					{
-						isColiding = false;
-					}
-
-					DrawTexture(floor.texture, (c * floor.texture.width), (l * floor.texture.height), WHITE);
-				}
-				if (matrix[l][c] == 'S')
-				{
-					DrawTexture(spike.texture, (c * spike.texture.width), (l * spike.texture.height), WHITE);
-				}
-				if (matrix[l][c] == 'D')
-				{
-					DrawTexture(parede.texture, (c * parede.texture.width), (l * parede.texture.height), RED);
-					Rectangle megamanRect = {megaman.position.x, megaman.position.y, megaman.width, megaman.texture.height};
-					Rectangle paredeRect = {c * parede.texture.width, l * parede.texture.height, parede.texture.width, parede.texture.height};
-					if (CheckCollisionRecs(megamanRect, paredeRect))
-					{
-						if (megaman.movement.x < 0)
-						{
-							megaman.position.x = paredeRect.x + paredeRect.width;
-						}
-
-						if (megaman.movement.x > 0)
-						{
-							megaman.position.x = paredeRect.x - megaman.width;
-						}
-					}
-					printf("DOH");
-				}
-			}
-		}
+        tileMap(matrix, &bomb, &megaman, &floor, &parede, &spike);
 		if (IsKeyPressed(KEY_C))
 		{
 			PlaySound(LoadSound("tiro.mp3"));
@@ -316,89 +374,13 @@ int main()
 		{
 			megaman.position.x = gameWidth - (megaman.texture.width / 3);
 		}
-		DrawTextureRec(bomb.texture, bomb.frameRec, bomb.position, WHITE);
+        DrawTextureRec(bomb.texture, bomb.frameRec, bomb.position, WHITE);
 		DrawTextureRec(bomb2.texture, bomb2.frameRec, bomb2.position, WHITE);
-		if (megaman.position.x - bomb2.position.x < 100)
-		{
-			// inimigo a direita do megaman
-			if (bomb2.position.x > megaman.position.x)
-			{
-				bomb2.texture = (Texture2D)LoadTexture("bomb.png");
-				bomb2.position.x = bomb2.position.x - 1;
-			}
-			// inimigo a esquerda do megaman
-			if (bomb2.position.x < megaman.position.x)
-			{
-				bomb2.texture = (Texture2D)LoadTexture("bombInvert.png");
-				bomb2.position.x = bomb2.position.x + 1;
-			}
-			// above or below
-			if (bomb2.position.y > megaman.position.y)
-			{
-				bomb2.position.y = bomb2.position.y - 1;
-			}
-			if (bomb2.position.y < megaman.position.y)
-			{
-				bomb2.position.y = bomb2.position.y + 1;
-			}
-			// colisão com inimigo
-			if (fabs(bomb2.position.x - megaman.position.x) < 10.0f)
-			{
-				if (fabs(bomb2.position.y - megaman.position.y) < 10.0f)
-				{
-					DrawText("COLLISION DETECTED", screenWidth / 2 - (MeasureText("COLLISION DETECTED", 20) / 2), screenHeight / 2, 20, RED);
-					return 0;
-				}
-			}
-		}
-		if (megaman.position.x - bomb.position.x < 100)
-		{
-			// inimigo a direita do megaman
-			if (bomb.position.x > megaman.position.x)
-			{
-				bomb.texture = (Texture2D)LoadTexture("bomb.png");
-				bomb.position.x = bomb.position.x - 1;
-			}
-			// inimigo a esquerda do megaman
-			if (bomb.position.x < megaman.position.x)
-			{
-				bomb.texture = (Texture2D)LoadTexture("bombInvert.png");
-				bomb.position.x = bomb.position.x + 1;
-			}
-			// above or below
-			if (bomb.position.y > megaman.position.y)
-			{
-				bomb.position.y = bomb.position.y - 1;
-			}
-			if (bomb.position.y < megaman.position.y)
-			{
-				bomb.position.y = bomb.position.y + 1;
-			}
-			// colisão com inimigo
-			if (fabs(bomb.position.x - megaman.position.x) < 10.0f)
-			{
-				if (fabs(bomb.position.y - megaman.position.y) < 10.0f)
-				{
-					DrawText("COLLISION DETECTED", screenWidth / 2 - (MeasureText("COLLISION DETECTED", 20) / 2), screenHeight / 2, 20, RED);
-					return 0;
-				}
-			}
-		}
-		// camera stuff
-		if (megaman.position.x <= screenWidth / 2)
-		{
-			camera.target.x = 0;
-			camera.offset.x = 0;
-		}
-		if (megaman.position.x >= screenWidth / 2)
-		{
-			camera.target.x = megaman.position.x;
-			camera.offset.x = screenWidth / 2 - ((float)megaman.texture.width / 6);
-		}
-		if (megaman.position.x >= (gameWidth - (screenWidth / 2) - (megaman.texture.width / 6)))
-		{
-			camera.target.x = gameWidth - (screenWidth / 2) - (megaman.texture.width / 6);
-		}
+        if (bombMovement(&bomb, &megaman) == 0)
+            return 0;
+        if(bombMovement(&bomb2, &megaman) == 0)
+            return 0;
+		cameraUpdate(&camera, &megaman);
 		EndDrawing();
 	}
 	UnloadMusicStream(musica);
