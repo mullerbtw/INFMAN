@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <math.h>
+#include <string.h>
 
 #define MATRIXLINES 15
 #define MATRIXCOLUMNS 200
@@ -75,7 +76,7 @@ typedef struct
 
 typedef struct
 {
-    char nomeJog[20];
+    char nomeJog[12];
     int pontuacao;
 } POSICOES;
 
@@ -94,7 +95,7 @@ void binaryFileRead(POSICOES leaderboard [NUMJOG])
     fclose(fp);
 }
 
-void binaryFilePrint(POSICOES leaderboard[NUMJOG])
+void binaryFilePrint(POSICOES leaderboard[])
 {
     InitWindow(screenWidth, screenHeight, "LEADERBOARD");
     SetTargetFPS(60);
@@ -114,7 +115,7 @@ void binaryFilePrint(POSICOES leaderboard[NUMJOG])
         
         DrawText
         (
-            leaderboard [0].(char)pontuacao,
+            TextFormat("%i", leaderboard [0].pontuacao),
             screenWidth / 2 + 20,
             50,
             10,
@@ -132,7 +133,7 @@ void binaryFilePrint(POSICOES leaderboard[NUMJOG])
         
         DrawText
         (
-            leaderboard [1].(char)pontuacao,
+            TextFormat("%i", leaderboard [1].pontuacao),
             screenWidth / 2 + 20,
             150,
             10,
@@ -150,7 +151,7 @@ void binaryFilePrint(POSICOES leaderboard[NUMJOG])
         
         DrawText
         (
-            leaderboard [2].(char)pontuacao,
+            TextFormat("%i", leaderboard [2].pontuacao),
             screenWidth / 2 + 20,
             250,
             10,
@@ -168,7 +169,7 @@ void binaryFilePrint(POSICOES leaderboard[NUMJOG])
         
         DrawText
         (
-            leaderboard [3].(char)pontuacao,
+            TextFormat("%i", leaderboard [3].pontuacao),
             screenWidth / 2 + 20,
             350,
             10,
@@ -186,7 +187,7 @@ void binaryFilePrint(POSICOES leaderboard[NUMJOG])
         
         DrawText
         (
-            leaderboard [4].(char)pontuacao,
+            TextFormat("%i", leaderboard [4].pontuacao),
             screenWidth / 2 + 20,
             450,
             10,
@@ -204,7 +205,7 @@ void binaryFilePrint(POSICOES leaderboard[NUMJOG])
         
         DrawText
         (
-            leaderboard [5].(char)pontuacao,
+            TextFormat("%i", leaderboard [5].pontuacao),
             screenWidth / 2 + 20,
             550,
             10,
@@ -288,10 +289,9 @@ int menu()
    return 0;
 }
 
-char enterPlayerName()
+int enterPlayerName(char *ptrNomeJog)
 {
-    char nomeJog [12] = "\0"; // último spot está com terminador, virá como parâmetro (?)
-    int key;
+    ptrNomeJog [12] = '\0'; // último spot está com terminador, virá como parâmetro (?)
     int charCount = 0;
     
     InitWindow(screenWidth, screenHeight, "UPDATE LEADERBOARD");
@@ -307,8 +307,8 @@ char enterPlayerName()
             {
                 return 0;
             }
-            nomeJog [charCount] = (char)key;
-            nomeJog [charCount + 1] = '\0';
+            ptrNomeJog [charCount] = (char)key;
+            ptrNomeJog [charCount + 1] = '\0';
             charCount++;
             key = GetCharPressed();
         }
@@ -318,14 +318,14 @@ char enterPlayerName()
         
         
         DrawText("ENTER YOUR NAME:", (screenWidth / 2) - (MeasureText("ENTER YOUR NAME:", 30) / 2), (screenHeight / 3), 30,  WHITE);
-        DrawText(*nomeJog, (screenWidth / 2) - ((MeasureText(nomeJog, 30)) / 2), screenHeight / 2, 30, WHITE);
+        DrawText(ptrNomeJog, (screenWidth / 2) - ((MeasureText(ptrNomeJog, 30)) / 2), screenHeight / 2, 30, WHITE);
         
         
         EndDrawing();
     }
     
     CloseWindow();
-    return nomeJog;
+    return 0;
 }
 
 void binaryFileSave(POSICOES leaderboard[NUMJOG])
@@ -1154,7 +1154,7 @@ int main()
     // call necessary binary file function
     int pontos;
     int option = 0;
-    char nome [12];
+    char nomeJog [12];
 
     while (option != 3)
     {
@@ -1168,20 +1168,20 @@ int main()
         if(option == PLAY)
             // call game function / loop
             pontos = gameplay();
-            for (int i = NUMJOG; i >= 0; i--) // CHECK IF LOOP NUMBERING IS RIGHT
+            for (int i = 5; i > 0; i--) // CHECK IF LOOP NUMBERING IS RIGHT
             {
                 if (pontos > leaderboard[i].pontuacao)
                 {
                     leaderboard [i].pontuacao = pontos;
-                    nome = enterPlayerName();
-                    leaderboard [i].nomeJog = nome;
+                    enterPlayerName(nomeJog);
+                    strcpy(nomeJog, leaderboard [i].nomeJog);
                     binaryFileSave(leaderboard);
                     break;
                 }
             }
             
         if(option == LEADERBOARD)
-            // call leaderboard function (with binary file display)
             binaryFilePrint(leaderboard);
     }
+    return 0;
 }
