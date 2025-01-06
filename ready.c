@@ -95,7 +95,7 @@ void binaryFileRead(POSICOES leaderboard [NUMJOG])
     fclose(fp);
 }
 
-void binaryFilePrint(POSICOES leaderboard[])
+void binaryFilePrint(POSICOES leaderboard [NUMJOG])
 {
     InitWindow(screenWidth, screenHeight, "LEADERBOARD");
     SetTargetFPS(60);
@@ -194,24 +194,6 @@ void binaryFilePrint(POSICOES leaderboard[])
             WHITE
         );
         
-        DrawText
-        (
-            leaderboard [5].nomeJog,
-            screenWidth / 2 - MeasureText(leaderboard [5].nomeJog, 10),
-            550,
-            10,
-            WHITE
-        );
-        
-        DrawText
-        (
-            TextFormat("%i", leaderboard [5].pontuacao),
-            screenWidth / 2 + 20,
-            550,
-            10,
-            WHITE
-        );
-        
         EndDrawing();
     }
     
@@ -292,6 +274,7 @@ int menu()
 int enterPlayerName(char *ptrNomeJog)
 {
     ptrNomeJog [12] = '\0'; // último spot está com terminador, virá como parâmetro (?)
+    ptrNomeJog [0] = '\0';
     int charCount = 0;
     
     InitWindow(screenWidth, screenHeight, "UPDATE LEADERBOARD");
@@ -305,6 +288,7 @@ int enterPlayerName(char *ptrNomeJog)
         {
             if ((char)key == '.')
             {
+                printf("%s", ptrNomeJog);
                 return 0;
             }
             ptrNomeJog [charCount] = (char)key;
@@ -316,10 +300,8 @@ int enterPlayerName(char *ptrNomeJog)
         BeginDrawing();
         ClearBackground(DARKBLUE);
         
-        
         DrawText("ENTER YOUR NAME:", (screenWidth / 2) - (MeasureText("ENTER YOUR NAME:", 30) / 2), (screenHeight / 3), 30,  WHITE);
         DrawText(ptrNomeJog, (screenWidth / 2) - ((MeasureText(ptrNomeJog, 30)) / 2), screenHeight / 2, 30, WHITE);
-        
         
         EndDrawing();
     }
@@ -328,10 +310,10 @@ int enterPlayerName(char *ptrNomeJog)
     return 0;
 }
 
-void binaryFileSave(POSICOES leaderboard[NUMJOG])
+void binaryFileSave(POSICOES leaderboard [NUMJOG])
 {
     FILE *fp;
-    fp = fopen("top_score.bin", "rb+");
+    fp = fopen("top_scores.bin", "rb+");
     if(fp != NULL)
     {
         if(fwrite(leaderboard, sizeof(POSICOES), NUMJOG, fp) != NUMJOG)
@@ -479,6 +461,8 @@ int bombDano(TIROCOLISAO *tiroColisao, ENEMY *bomb, int *pontos)
         *pontos += 200;
 		return 1;
 	}
+    
+    return 0;
 }
 
 int bombMovement(ENEMY *bomb, MEGAMAN *megaman, int *vidas)
@@ -1163,10 +1147,6 @@ int main()
         
         binaryFileRead(leaderboard);
         
-        if(option == EXIT)
-        {
-            return 0;
-        }
         
         if(option == PLAY)
         {
@@ -1176,9 +1156,10 @@ int main()
             {
                 if (pontos > leaderboard[i].pontuacao)
                 {
-                    leaderboard [i].pontuacao = pontos;
+                    leaderboard [i].pontuacao = pontos; // FUNCIONA
                     enterPlayerName(nomeJog);
-                    strcpy(nomeJog, leaderboard [i].nomeJog);
+                    strcpy(nomeJog, leaderboard [i].nomeJog); // NÃO FUNCIONA E APAGA NOME DO PRIMEIRO COLOCADO
+                    // leaderboard [i] = {nomeJog, pontos};
                     binaryFileSave(leaderboard);
                     break;
                 }
@@ -1188,6 +1169,11 @@ int main()
         if(option == LEADERBOARD)
         {        
             binaryFilePrint(leaderboard);
+        }
+        
+        if(option == EXIT)
+        {
+            return 0;
         }
     }
     return 0;
