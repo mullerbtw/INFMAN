@@ -863,9 +863,10 @@ int gameplay()
         pontosPositionUpdate = 0;
 		
         DrawTexture(checkpoint.texture, checkpoint.position.x, checkpoint.position.y, GRAY);
+        
         if (arrivedAtCheckpoint(&megaman, &checkpoint))
         {
-            break;
+            return pontos;
         }
         
         if (vidas < 0)
@@ -1144,13 +1145,13 @@ int gameplay()
 	}
 	CloseAudioDevice();
 	CloseWindow();
-	return pontos; // in order to use in main()
+	return 0; // in order to use in main()
 }
 
 int main()
 {
     POSICOES leaderboard [NUMJOG];
-    binaryFileRead(leaderboard);
+    // binaryFileRead(leaderboard);
     // call necessary binary file function
     int pontos;
     int option = 0;
