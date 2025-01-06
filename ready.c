@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <math.h>
 #include <string.h>
+#include <ctype.h>
 
 #define MATRIXLINES 15
 #define MATRIXCOLUMNS 200
@@ -288,10 +289,10 @@ int enterPlayerName(char *ptrNomeJog)
         {
             if ((char)key == '.')
             {
-                printf("%s", ptrNomeJog);
+                // printf("%s", ptrNomeJog);
                 return 0;
             }
-            ptrNomeJog [charCount] = (char)key;
+            ptrNomeJog [charCount] = toupper((char)key);
             ptrNomeJog [charCount + 1] = '\0';
             charCount++;
             key = GetCharPressed();
@@ -1152,22 +1153,66 @@ int main()
         {
             // call game function / loop
             pontos = gameplay();
-            for (int i = 0; i < 5; i++) // CHECK IF LOOP NUMBERING IS RIGHT
+        
+            if (pontos > leaderboard[0].pontuacao)
             {
-                if (pontos > leaderboard[i].pontuacao)
-                {
-                    leaderboard [i].pontuacao = pontos; // FUNCIONA
-                    enterPlayerName(nomeJog);
-                    strcpy(nomeJog, leaderboard [i].nomeJog); // NÃO FUNCIONA E APAGA NOME DO PRIMEIRO COLOCADO
-                    // leaderboard [i] = {nomeJog, pontos};
-                    binaryFileSave(leaderboard);
-                    break;
-                }
+                leaderboard [4] = leaderboard [3];
+                leaderboard [3] = leaderboard [2];
+                leaderboard [2] = leaderboard [1];
+                leaderboard [1] = leaderboard [0];
+                
+                leaderboard [0].pontuacao = pontos; // FUNCIONA
+                enterPlayerName(nomeJog);
+                strcpy(leaderboard [0].nomeJog, nomeJog); // NÃO FUNCIONA E APAGA NOME DO PRIMEIRO COLOCADO (!)
+                // leaderboard [i] = {nomeJog, pontos};
+                binaryFileSave(leaderboard);
+            }
+            else if (pontos > leaderboard[1].pontuacao)
+            {
+                leaderboard [4] = leaderboard [3];
+                leaderboard [3] = leaderboard [2];
+                leaderboard [2] = leaderboard [1];
+                
+                leaderboard [1].pontuacao = pontos; // FUNCIONA
+                enterPlayerName(nomeJog);
+                strcpy(leaderboard [1].nomeJog, nomeJog); // NÃO FUNCIONA E APAGA NOME DO PRIMEIRO COLOCADO (!)
+                // leaderboard [i] = {nomeJog, pontos};
+                binaryFileSave(leaderboard);
+            }
+            else if (pontos > leaderboard[2].pontuacao)
+            {
+                leaderboard [4] = leaderboard [3];
+                leaderboard [3] = leaderboard [2];
+                
+                leaderboard [2].pontuacao = pontos; // FUNCIONA
+                enterPlayerName(nomeJog);
+                strcpy(leaderboard [2].nomeJog, nomeJog); // NÃO FUNCIONA E APAGA NOME DO PRIMEIRO COLOCADO (!)
+                // leaderboard [i] = {nomeJog, pontos};
+                binaryFileSave(leaderboard);
+            }
+            else if (pontos > leaderboard[3].pontuacao)
+            {
+                leaderboard [4] = leaderboard [3];
+                
+                leaderboard [3].pontuacao = pontos; // FUNCIONA
+                enterPlayerName(nomeJog);
+                strcpy(leaderboard [3].nomeJog, nomeJog); // NÃO FUNCIONA E APAGA NOME DO PRIMEIRO COLOCADO (!)
+                // leaderboard [i] = {nomeJog, pontos};
+                binaryFileSave(leaderboard);
+            }
+            else if (pontos > leaderboard[4].pontuacao)
+            {
+                leaderboard [4].pontuacao = pontos; // FUNCIONA
+                enterPlayerName(nomeJog);
+                strcpy(leaderboard [4].nomeJog, nomeJog); // NÃO FUNCIONA E APAGA NOME DO PRIMEIRO COLOCADO (!)
+                // leaderboard [i] = {nomeJog, pontos};
+                binaryFileSave(leaderboard);
             }
         }
         
         if(option == LEADERBOARD)
         {        
+            binaryFileRead(leaderboard);
             binaryFilePrint(leaderboard);
         }
         
