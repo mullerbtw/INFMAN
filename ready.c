@@ -1175,7 +1175,7 @@ int main()
                 
                 leaderboard [1].pontuacao = pontos; // FUNCIONA
                 enterPlayerName(nomeJog);
-                strcpy(leaderboard [1].nomeJog, nomeJog); // NÃO FUNCIONA E APAGA NOME DO PRIMEIRO COLOCADO (!)
+                strcpy(leaderboard [1].nomeJog, nomeJog);
                 // leaderboard [i] = {nomeJog, pontos};
                 binaryFileSave(leaderboard);
             }
@@ -1186,7 +1186,7 @@ int main()
                 
                 leaderboard [2].pontuacao = pontos; // FUNCIONA
                 enterPlayerName(nomeJog);
-                strcpy(leaderboard [2].nomeJog, nomeJog); // NÃO FUNCIONA E APAGA NOME DO PRIMEIRO COLOCADO (!)
+                strcpy(leaderboard [2].nomeJog, nomeJog);
                 // leaderboard [i] = {nomeJog, pontos};
                 binaryFileSave(leaderboard);
             }
@@ -1196,7 +1196,7 @@ int main()
                 
                 leaderboard [3].pontuacao = pontos; // FUNCIONA
                 enterPlayerName(nomeJog);
-                strcpy(leaderboard [3].nomeJog, nomeJog); // NÃO FUNCIONA E APAGA NOME DO PRIMEIRO COLOCADO (!)
+                strcpy(leaderboard [3].nomeJog, nomeJog);
                 // leaderboard [i] = {nomeJog, pontos};
                 binaryFileSave(leaderboard);
             }
@@ -1204,7 +1204,7 @@ int main()
             {
                 leaderboard [4].pontuacao = pontos; // FUNCIONA
                 enterPlayerName(nomeJog);
-                strcpy(leaderboard [4].nomeJog, nomeJog); // NÃO FUNCIONA E APAGA NOME DO PRIMEIRO COLOCADO (!)
+                strcpy(leaderboard [4].nomeJog, nomeJog);
                 // leaderboard [i] = {nomeJog, pontos};
                 binaryFileSave(leaderboard);
             }
