@@ -331,7 +331,7 @@ int enterPlayerName(char *ptrNomeJog)
 void binaryFileSave(POSICOES leaderboard[NUMJOG])
 {
     FILE *fp;
-    fp = fopen("top_score.bin", "wb");
+    fp = fopen("top_score.bin", "rb+");
     if(fp != NULL)
     {
         if(fwrite(leaderboard, sizeof(POSICOES), NUMJOG, fp) != NUMJOG)
@@ -1157,19 +1157,22 @@ int main()
     int option = 0;
     char nomeJog [12];
 
-    while (option != 3)
+    while (option != EXIT)
     {
         option = menu();
         
-        if(option == EXIT)
-            return 0;
-        
         binaryFileRead(leaderboard);
         
+        if(option == EXIT)
+        {
+            return 0;
+        }
+        
         if(option == PLAY)
+        {
             // call game function / loop
             pontos = gameplay();
-            for (int i = 5; i > 0; i--) // CHECK IF LOOP NUMBERING IS RIGHT
+            for (int i = 0; i < 5; i++) // CHECK IF LOOP NUMBERING IS RIGHT
             {
                 if (pontos > leaderboard[i].pontuacao)
                 {
@@ -1180,9 +1183,12 @@ int main()
                     break;
                 }
             }
-            
+        }
+        
         if(option == LEADERBOARD)
+        {        
             binaryFilePrint(leaderboard);
+        }
     }
     return 0;
 }
