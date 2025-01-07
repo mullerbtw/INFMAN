@@ -109,7 +109,7 @@ void binaryFilePrint(POSICOES leaderboard [NUMJOG])
         (
             leaderboard [0].nomeJog,
             screenWidth / 2 - MeasureText(leaderboard [0].nomeJog, 10),
-            50,
+            100,
             10,
             WHITE
         );
@@ -118,7 +118,7 @@ void binaryFilePrint(POSICOES leaderboard [NUMJOG])
         (
             TextFormat("%i", leaderboard [0].pontuacao),
             screenWidth / 2 + 20,
-            50,
+            100,
             10,
             WHITE
         );
@@ -127,7 +127,7 @@ void binaryFilePrint(POSICOES leaderboard [NUMJOG])
         (
             leaderboard [1].nomeJog,
             screenWidth / 2 - MeasureText(leaderboard [1].nomeJog, 10),
-            150,
+            180,
             10, 
             WHITE
         );
@@ -136,7 +136,7 @@ void binaryFilePrint(POSICOES leaderboard [NUMJOG])
         (
             TextFormat("%i", leaderboard [1].pontuacao),
             screenWidth / 2 + 20,
-            150,
+            180,
             10,
             WHITE
         );
@@ -145,7 +145,7 @@ void binaryFilePrint(POSICOES leaderboard [NUMJOG])
         (
             leaderboard [2].nomeJog,
             screenWidth / 2 - MeasureText(leaderboard [2].nomeJog, 10),
-            250,
+            260,
             10,
             WHITE
         );
@@ -154,7 +154,7 @@ void binaryFilePrint(POSICOES leaderboard [NUMJOG])
         (
             TextFormat("%i", leaderboard [2].pontuacao),
             screenWidth / 2 + 20,
-            250,
+            260,
             10,
             WHITE
         );
@@ -163,7 +163,7 @@ void binaryFilePrint(POSICOES leaderboard [NUMJOG])
         (
             leaderboard [3].nomeJog,
             screenWidth / 2 - MeasureText(leaderboard [3].nomeJog, 10),
-            350,
+            340,
             10,
             WHITE
         );
@@ -172,7 +172,7 @@ void binaryFilePrint(POSICOES leaderboard [NUMJOG])
         (
             TextFormat("%i", leaderboard [3].pontuacao),
             screenWidth / 2 + 20,
-            350,
+            340,
             10,
             WHITE
         );
@@ -181,7 +181,7 @@ void binaryFilePrint(POSICOES leaderboard [NUMJOG])
         (
             leaderboard [4].nomeJog,
             screenWidth / 2 - MeasureText(leaderboard [4].nomeJog, 10),
-            450,
+            420,
             10,
             WHITE
         );
@@ -190,7 +190,7 @@ void binaryFilePrint(POSICOES leaderboard [NUMJOG])
         (
             TextFormat("%i", leaderboard [4].pontuacao),
             screenWidth / 2 + 20,
-            450,
+            420,
             10,
             WHITE
         );
@@ -829,7 +829,7 @@ int gameplay()
 	Music musica = LoadMusicStream("musica.mp3");
 	Sound tiroSound = LoadSound("tiro.mp3");
     Sound deathSound = LoadSound("manDeathScream.ogg");
-    Sound moreteSound = LoadSound("maleVoiceScreamingLoudly.wav");
+    //  moreteSound = LoadSound("maleVoiceScreamingLoudly.wav");
     Sound jumpSound = LoadSound("jump.mp3");
     
     SetTargetFPS(60);
@@ -1114,11 +1114,10 @@ int gameplay()
         megamanPosXTemp = megaman.position.x;
         megamanPosYTemp = megaman.position.y;
          
-         
-        if (vidas == 1)
-        {
-            deathSound = moreteSound; 
-        }
+        // if (vidas == 1)
+        // {
+        //     deathSound = moreteSound; 
+        // }
         
         if (vidas == 0)
         {
@@ -1141,9 +1140,10 @@ int main()
     int pontos;
     int option = 0;
     char nomeJog [12];
+    char tempNomeJog [12];
 
     while (option != EXIT)
-    {
+    {        
         option = menu();
         
         binaryFileRead(leaderboard);
@@ -1163,12 +1163,16 @@ int main()
                 
                 leaderboard [0].pontuacao = pontos; // FUNCIONA
                 enterPlayerName(nomeJog);
-                strcpy(leaderboard [0].nomeJog, nomeJog); // NÃO FUNCIONA E APAGA NOME DO PRIMEIRO COLOCADO (!)
+                strcpy(leaderboard [0].nomeJog, nomeJog);
                 // leaderboard [i] = {nomeJog, pontos};
                 binaryFileSave(leaderboard);
             }
             else if (pontos > leaderboard[1].pontuacao)
             {
+                strcpy(tempNomeJog, leaderboard [0].nomeJog);
+                printf("%s", tempNomeJog);
+                strcpy(leaderboard [0].nomeJog, tempNomeJog);
+                
                 leaderboard [4] = leaderboard [3];
                 leaderboard [3] = leaderboard [2];
                 leaderboard [2] = leaderboard [1];
@@ -1177,10 +1181,15 @@ int main()
                 enterPlayerName(nomeJog);
                 strcpy(leaderboard [1].nomeJog, nomeJog);
                 // leaderboard [i] = {nomeJog, pontos};
+                
                 binaryFileSave(leaderboard);
             }
             else if (pontos > leaderboard[2].pontuacao)
             {
+                strcpy(tempNomeJog, leaderboard [0].nomeJog);
+                printf("%s", tempNomeJog);
+                strcpy(leaderboard [0].nomeJog, tempNomeJog);
+                
                 leaderboard [4] = leaderboard [3];
                 leaderboard [3] = leaderboard [2];
                 
@@ -1188,24 +1197,35 @@ int main()
                 enterPlayerName(nomeJog);
                 strcpy(leaderboard [2].nomeJog, nomeJog);
                 // leaderboard [i] = {nomeJog, pontos};
+                
                 binaryFileSave(leaderboard);
             }
             else if (pontos > leaderboard[3].pontuacao)
             {
+                strcpy(tempNomeJog, leaderboard [0].nomeJog);
+                printf("%s", tempNomeJog);
+                strcpy(leaderboard [0].nomeJog, tempNomeJog);
+                
                 leaderboard [4] = leaderboard [3];
                 
                 leaderboard [3].pontuacao = pontos; // FUNCIONA
                 enterPlayerName(nomeJog);
                 strcpy(leaderboard [3].nomeJog, nomeJog);
                 // leaderboard [i] = {nomeJog, pontos};
+                
                 binaryFileSave(leaderboard);
             }
             else if (pontos > leaderboard[4].pontuacao)
             {
+                strcpy(tempNomeJog, leaderboard [0].nomeJog);
+                printf("%s", tempNomeJog);
+                strcpy(leaderboard [0].nomeJog, tempNomeJog);
+                
                 leaderboard [4].pontuacao = pontos; // FUNCIONA
                 enterPlayerName(nomeJog);
                 strcpy(leaderboard [4].nomeJog, nomeJog);
                 // leaderboard [i] = {nomeJog, pontos};
+                
                 binaryFileSave(leaderboard);
             }
         }
@@ -1214,6 +1234,17 @@ int main()
         {        
             binaryFileRead(leaderboard);
             binaryFilePrint(leaderboard);
+            
+            printf("%s -", leaderboard [0].nomeJog);
+            printf(" %d\n", leaderboard [0].pontuacao);
+            printf("%s -", leaderboard [1].nomeJog);
+            printf(" %d\n", leaderboard [1].pontuacao);
+            printf("%s -", leaderboard [2].nomeJog);
+            printf(" %d\n", leaderboard [2].pontuacao);
+            printf("%s -", leaderboard [3].nomeJog);
+            printf(" %d\n", leaderboard [3].pontuacao);
+            printf("%s -", leaderboard [4].nomeJog);
+            printf(" %d\n", leaderboard [4].pontuacao);
         }
         
         if(option == EXIT)
