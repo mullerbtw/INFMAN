@@ -15,9 +15,13 @@
 #define EXIT 3
 #define NUMJOG 5
 
+// declaração de variáveis universais
+
 const int screenWidth = 1200;
 const int screenHeight = 600;
 const int gameWidth = 6400;
+
+// declaração de structs
 
 typedef struct
 {
@@ -70,277 +74,284 @@ typedef struct
 
 typedef struct
 {
-    Texture2D texture;
-    Vector2 position;
-    Rectangle frameRec;
+	Texture2D texture;
+	Vector2 position;
+	Rectangle frameRec;
 } CHECKPOINT;
 
 typedef struct
 {
-    char nomeJog[12];
-    int pontuacao;
+	char nomeJog[12];
+	int pontuacao;
 } POSICOES;
 
-void binaryFileRead(POSICOES leaderboard [NUMJOG])
-{
-    FILE *fp;
-    fp = fopen("top_scores.bin", "rb");
+// funções do jogo
 
-    if(fp != NULL)
-    {
-        if(fread(leaderboard, sizeof(POSICOES), NUMJOG, fp) != NUMJOG)
-            printf("ERRO NA LEITURA!");
-        else
-            printf("ARQUIVO LIDO COM SUCESSO!");
-    }
-    fclose(fp);
+// função que pega o conteúdo do arquivo binário
+// e copia para a struct do leaderboard
+void binaryFileRead(POSICOES leaderboard[NUMJOG])
+{
+	FILE *fp;
+	fp = fopen("top_scores.bin", "rb");
+
+	if (fp != NULL)
+	{
+		if (fread(leaderboard, sizeof(POSICOES), NUMJOG, fp) != NUMJOG)
+			printf("ERRO NA LEITURA!");
+		else
+			printf("ARQUIVO LIDO COM SUCESSO!");
+	}
+	fclose(fp);
 }
 
-void binaryFilePrint(POSICOES leaderboard [NUMJOG])
+// função que pega o conteúdo da struct do leaderboard
+// e imprime na tela para o usuário
+void binaryFilePrint(POSICOES leaderboard[NUMJOG])
 {
-    InitWindow(screenWidth, screenHeight, "LEADERBOARD");
-    SetTargetFPS(60);
-    
-    while (!WindowShouldClose())
-    {
-        ClearBackground(DARKBLUE);
-        
-        DrawText
-        (
-            leaderboard [0].nomeJog,
-            screenWidth / 2 - MeasureText(leaderboard [0].nomeJog, 10),
-            100,
-            10,
-            WHITE
-        );
-        
-        DrawText
-        (
-            TextFormat("%i", leaderboard [0].pontuacao),
-            screenWidth / 2 + 20,
-            100,
-            10,
-            WHITE
-        );
-        
-        DrawText
-        (
-            leaderboard [1].nomeJog,
-            screenWidth / 2 - MeasureText(leaderboard [1].nomeJog, 10),
-            180,
-            10, 
-            WHITE
-        );
-        
-        DrawText
-        (
-            TextFormat("%i", leaderboard [1].pontuacao),
-            screenWidth / 2 + 20,
-            180,
-            10,
-            WHITE
-        );
-        
-        DrawText
-        (
-            leaderboard [2].nomeJog,
-            screenWidth / 2 - MeasureText(leaderboard [2].nomeJog, 10),
-            260,
-            10,
-            WHITE
-        );
-        
-        DrawText
-        (
-            TextFormat("%i", leaderboard [2].pontuacao),
-            screenWidth / 2 + 20,
-            260,
-            10,
-            WHITE
-        );
-        
-        DrawText
-        (
-            leaderboard [3].nomeJog,
-            screenWidth / 2 - MeasureText(leaderboard [3].nomeJog, 10),
-            340,
-            10,
-            WHITE
-        );
-        
-        DrawText
-        (
-            TextFormat("%i", leaderboard [3].pontuacao),
-            screenWidth / 2 + 20,
-            340,
-            10,
-            WHITE
-        );
-        
-        DrawText
-        (
-            leaderboard [4].nomeJog,
-            screenWidth / 2 - MeasureText(leaderboard [4].nomeJog, 10),
-            420,
-            10,
-            WHITE
-        );
-        
-        DrawText
-        (
-            TextFormat("%i", leaderboard [4].pontuacao),
-            screenWidth / 2 + 20,
-            420,
-            10,
-            WHITE
-        );
-        
-        EndDrawing();
-    }
-    
-    CloseWindow();
+	InitWindow(screenWidth, screenHeight, "LEADERBOARD");
+	SetTargetFPS(60);
+
+	while (!WindowShouldClose())
+	{
+		ClearBackground(DARKBLUE);
+
+		DrawText(
+			leaderboard[0].nomeJog,
+			screenWidth / 2 - MeasureText(leaderboard[0].nomeJog, 10),
+			100,
+			10,
+			WHITE);
+
+		DrawText(
+			TextFormat("%i", leaderboard[0].pontuacao),
+			screenWidth / 2 + 20,
+			100,
+			10,
+			WHITE);
+
+		DrawText(
+			leaderboard[1].nomeJog,
+			screenWidth / 2 - MeasureText(leaderboard[1].nomeJog, 10),
+			180,
+			10,
+			WHITE);
+
+		DrawText(
+			TextFormat("%i", leaderboard[1].pontuacao),
+			screenWidth / 2 + 20,
+			180,
+			10,
+			WHITE);
+
+		DrawText(
+			leaderboard[2].nomeJog,
+			screenWidth / 2 - MeasureText(leaderboard[2].nomeJog, 10),
+			260,
+			10,
+			WHITE);
+
+		DrawText(
+			TextFormat("%i", leaderboard[2].pontuacao),
+			screenWidth / 2 + 20,
+			260,
+			10,
+			WHITE);
+
+		DrawText(
+			leaderboard[3].nomeJog,
+			screenWidth / 2 - MeasureText(leaderboard[3].nomeJog, 10),
+			340,
+			10,
+			WHITE);
+
+		DrawText(
+			TextFormat("%i", leaderboard[3].pontuacao),
+			screenWidth / 2 + 20,
+			340,
+			10,
+			WHITE);
+
+		DrawText(
+			leaderboard[4].nomeJog,
+			screenWidth / 2 - MeasureText(leaderboard[4].nomeJog, 10),
+			420,
+			10,
+			WHITE);
+
+		DrawText(
+			TextFormat("%i", leaderboard[4].pontuacao),
+			screenWidth / 2 + 20,
+			420,
+			10,
+			WHITE);
+
+		EndDrawing();
+	}
+
+	CloseWindow();
 }
 
+// função de menu que apresenta as opções disponíveis
 int menu()
 {
-   InitWindow(screenWidth, screenHeight, "MENU");
+	InitWindow(screenWidth, screenHeight, "MENU");
 
-   Texture2D title = LoadTexture("INFMAN.png");
-   
-   SetTargetFPS(60);
-   
-   while(!WindowShouldClose())
-   {
-      BeginDrawing();
+	Texture2D title = LoadTexture("INFMAN.png");
 
-      ClearBackground(DARKBLUE);
+	SetTargetFPS(60);
 
-      DrawTexture(title, screenWidth / 2 - 426 / 2, 100, RAYWHITE);
-      DrawText("PLAY", screenWidth / 2.0f - MeasureText("PLAY", 30) / 2.0f, 280, 30, RAYWHITE);
-      DrawText("LEADERBOARD", screenWidth / 2.0f - MeasureText("LEADERBOARD", 30) / 2.0f , 360, 30, RAYWHITE);
-      DrawText("EXIT", screenWidth / 2.0f - MeasureText("EXIT", 30) / 2.0f, 440, 30, RAYWHITE);
+	while (!WindowShouldClose())
+	{
+		BeginDrawing();
 
-      Rectangle playRec = (Rectangle)
-      {
-         screenWidth / 2.0f - MeasureText("PLAY", 30) / 2.0f,
-         280,
-         MeasureText("PLAY", 30),
-         30
-      };
+		ClearBackground(DARKBLUE);
 
-      Rectangle leaderboardRec = (Rectangle)
-      {
-         screenWidth / 2.0f - MeasureText("LEADERBOARD", 30) / 2.0f,
-         360,
-         MeasureText("LEADERBOARD", 30),
-         30
-      };
+		DrawTexture(title, screenWidth / 2 - 426 / 2, 100, RAYWHITE);
+		DrawText
+		(
+			"PLAY",
+			screenWidth / 2.0f - MeasureText("PLAY", 30) / 2.0f,
+			280,
+			30,
+			RAYWHITE);
+			
+		DrawText
+		(
+			"LEADERBOARD",
+			screenWidth / 2.0f - MeasureText("LEADERBOARD", 30) / 2.0f,
+			360,
+			30,
+			RAYWHITE);
+			
+		DrawText
+		(
+			"EXIT",
+			screenWidth / 2.0f - MeasureText("EXIT", 30) / 2.0f,
+			440,
+			30,
+			RAYWHITE);
 
-      Rectangle exitRec = (Rectangle)
-      {
-         screenWidth / 2.0f - MeasureText("EXIT", 30) / 2.0f,
-         440,
-         MeasureText("EXIT", 30),
-         30
-      };
+		Rectangle playRec = (Rectangle){
+			screenWidth / 2.0f - MeasureText("PLAY", 30) / 2.0f,
+			280,
+			MeasureText("PLAY", 30),
+			30};
 
-      if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-      {
-         if(CheckCollisionPointRec(GetMousePosition(), playRec))
-         // if button pressed on 'play' area
-         {
-            return PLAY;
-         }
+		Rectangle leaderboardRec = (Rectangle){
+			screenWidth / 2.0f - MeasureText("LEADERBOARD", 30) / 2.0f,
+			360,
+			MeasureText("LEADERBOARD", 30),
+			30};
 
-         if(CheckCollisionPointRec(GetMousePosition(), leaderboardRec))
-         // if button pressed on 'leaderboard' area
-         {
-            return LEADERBOARD;
-            // only load .bin file if leaderboard chosen
-         }
+		Rectangle exitRec = (Rectangle){
+			screenWidth / 2.0f - MeasureText("EXIT", 30) / 2.0f,
+			440,
+			MeasureText("EXIT", 30),
+			30};
 
-         if(CheckCollisionPointRec(GetMousePosition(), exitRec))
-         // if button pressed on 'exit' area
-         {
-            return EXIT;
-         }
-      }
-      EndDrawing();
-   }
-   UnloadTexture(title);
-   CloseWindow();
-   return 0;
+		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+		{
+			if (CheckCollisionPointRec(GetMousePosition(), playRec))
+			// se botão do mouse pressionado sobre "PLAY"
+			{
+				return PLAY;
+			}
+
+			if (CheckCollisionPointRec(GetMousePosition(), leaderboardRec))
+			// se botão do mouse pressionado sobre "LEADERBOARD"
+			{
+				return LEADERBOARD;
+			}
+
+			if (CheckCollisionPointRec(GetMousePosition(), exitRec))
+			// se botão do mouse pressionado sobre "EXIT"
+			{
+				return EXIT;
+			}
+		}
+		
+		EndDrawing();
+	}
+	UnloadTexture(title);
+	CloseWindow();
+	return 0;
 }
 
+// função que pede o nome do usuário
+// utilizada logo após checagem se pontuação atual
+// foi maior do que alguma no leaderboard
 int enterPlayerName(char *ptrNomeJog)
 {
-    ptrNomeJog [12] = '\0'; // último spot está com terminador, virá como parâmetro (?)
-    ptrNomeJog [0] = '\0';
-    int charCount = 0;
-    
-    InitWindow(screenWidth, screenHeight, "UPDATE LEADERBOARD");
-    SetTargetFPS(60);
-    
-    while (!WindowShouldClose())
-    {   
-        int key = GetCharPressed();
-       
-        while (key > 0 && charCount <= 11)
-        {
-            if ((char)key == '.')
-            {
-                // printf("%s", ptrNomeJog);
-                return 0;
-            }
-            ptrNomeJog [charCount] = toupper((char)key);
-            ptrNomeJog [charCount + 1] = '\0';
-            charCount++;
-            key = GetCharPressed();
-        }
-        
-        BeginDrawing();
-        ClearBackground(DARKBLUE);
-        
-        DrawText("ENTER YOUR NAME:", (screenWidth / 2) - (MeasureText("ENTER YOUR NAME:", 30) / 2), (screenHeight / 3), 30,  WHITE);
-        DrawText(ptrNomeJog, (screenWidth / 2) - ((MeasureText(ptrNomeJog, 30)) / 2), screenHeight / 2, 30, WHITE);
-        
-        EndDrawing();
-    }
-    
-    CloseWindow();
-    return 0;
+	ptrNomeJog[12] = '\0';
+	ptrNomeJog[0] = '\0';
+	int charCount = 0;
+
+	InitWindow(screenWidth, screenHeight, "UPDATE LEADERBOARD");
+	SetTargetFPS(60);
+
+	while (!WindowShouldClose())
+	{
+		int key = GetCharPressed();
+
+		while (key > 0 && charCount <= 11)
+		{
+			if ((char)key == '.')
+			{
+				return 0;
+			}
+			ptrNomeJog[charCount] = toupper((char)key);
+			ptrNomeJog[charCount + 1] = '\0';
+			charCount++;
+			key = GetCharPressed();
+		}
+
+		BeginDrawing();
+		ClearBackground(DARKBLUE);
+
+		DrawText("ENTER YOUR NAME:", (screenWidth / 2) - (MeasureText("ENTER YOUR NAME:", 30) / 2), (screenHeight / 3), 30, WHITE);
+		DrawText(ptrNomeJog, (screenWidth / 2) - ((MeasureText(ptrNomeJog, 30)) / 2), screenHeight / 2, 30, WHITE);
+
+		EndDrawing();
+	}
+
+	CloseWindow();
+	return 0;
 }
 
-void binaryFileSave(POSICOES leaderboard [NUMJOG])
+// função que salva o conteúdo da struct leaderboard
+// no arquivo binário
+void binaryFileSave(POSICOES leaderboard[NUMJOG])
 {
-    FILE *fp;
-    fp = fopen("top_scores.bin", "rb+");
-    if(fp != NULL)
-    {
-        if(fwrite(leaderboard, sizeof(POSICOES), NUMJOG, fp) != NUMJOG)
-            printf("ERRO NA ESCRITA!");
-        else
-            printf("ARQUIVO ESCRITO COM SUCESSO!\n");
-    }
-    fclose(fp);
+	FILE *fp;
+	fp = fopen("top_scores.bin", "rb+");
+	if (fp != NULL)
+	{
+		if (fwrite(leaderboard, sizeof(POSICOES), NUMJOG, fp) != NUMJOG)
+			printf("ERRO NA ESCRITA!");
+		else
+			printf("ARQUIVO ESCRITO COM SUCESSO!\n");
+	}
+	fclose(fp);
 }
 
+// função que desenha a textura do disparo
 void drawTiro(TIRO tiro, int correcaoTiro)
 {
-	DrawTexture
-    (
-        tiro.texture,
-        tiro.position.x - correcaoTiro,
-        tiro.position.y,
-        WHITE);
+	DrawTexture(
+		tiro.texture,
+		tiro.position.x - correcaoTiro,
+		tiro.position.y,
+		WHITE);
 }
 
+// função que corrige a posição da textura do disparo
 void atualizaTiro(TIRO *tiro, Vector2 megamanPos)
 {
 	tiro->position.x = megamanPos.x;
 	tiro->position.y = megamanPos.y;
 }
 
+// função que le o .txt da matriz do mapa
 void readMatrix(char matrix[][MATRIXCOLUMNS])
 {
 	FILE *fp;
@@ -359,6 +370,8 @@ void readMatrix(char matrix[][MATRIXCOLUMNS])
 	}
 }
 
+// função que inicializa a posição do megaman
+// baseado no seu ponto de spawn na matriz
 void initMegamanPosition(MEGAMAN **megaman, char matrix[][MATRIXCOLUMNS])
 {
 	for (int l = 0; l < MATRIXLINES; l++)
@@ -367,17 +380,17 @@ void initMegamanPosition(MEGAMAN **megaman, char matrix[][MATRIXCOLUMNS])
 		{
 			if (matrix[l][c] == 'P')
 			{
-				(*megaman)->position = (Vector2)
-                {
-                    (c * (*megaman)->texture.width),
-                    (l * (*megaman)->texture.height)
-                };
+				(*megaman)->position = (Vector2){
+					(c * (*megaman)->texture.width),
+					(l * (*megaman)->texture.height)};
 			}
 		}
 	}
 }
 
-void initParedePosition(char matrix [][MATRIXCOLUMNS], BOX *parede)
+// função que inicializa as texturas de parede
+// baseado nos seus pontos de spawn na matriz
+void initParedePosition(char matrix[][MATRIXCOLUMNS], BOX *parede)
 {
 	for (int l = 0; l < MATRIXLINES; l++)
 	{
@@ -385,18 +398,18 @@ void initParedePosition(char matrix [][MATRIXCOLUMNS], BOX *parede)
 		{
 			if (matrix[l][c] == 'D')
 			{
-				parede->frameRec = (Rectangle)
-                {
-                    c * parede->texture.width,
-                    l * parede->texture.height,
-                    parede->texture.width,
-                    parede->texture.height
-                };
+				parede->frameRec = (Rectangle){
+					c * parede->texture.width,
+					l * parede->texture.height,
+					parede->texture.width,
+					parede->texture.height};
 			}
 		}
 	}
 }
 
+// função que inicializa as texturas de chão
+// baseado nos seus pontos de spawn na matriz
 void initFloorPosition(char matrix[][MATRIXCOLUMNS], BOX *floor)
 {
 	for (int l = 0; l < MATRIXLINES; l++)
@@ -405,18 +418,18 @@ void initFloorPosition(char matrix[][MATRIXCOLUMNS], BOX *floor)
 		{
 			if (matrix[l][c] == 'B')
 			{
-				floor->frameRec = (Rectangle)
-                {
-                    c * floor->texture.width,
-                    l * floor->texture.height,
-                    floor->texture.width,
-                    floor->texture.height
-                };
+				floor->frameRec = (Rectangle){
+					c * floor->texture.width,
+					l * floor->texture.height,
+					floor->texture.width,
+					floor->texture.height};
 			}
 		}
 	}
 }
 
+// função que inicializa as configurações
+// do modo camera
 void initCameraSettings(Camera2D *camera, MEGAMAN *megaman)
 {
 	camera->offset = (Vector2){0, 0};
@@ -425,47 +438,50 @@ void initCameraSettings(Camera2D *camera, MEGAMAN *megaman)
 	camera->zoom = 1.0;
 }
 
+// função que desenha a textura de background
+// ao longo do mapa do jogo
 void drawBackground(BACKGROUND *background)
 {
 	for (int i = 0; i <= 9; i++)
 	{
-		DrawTexture
-        (
-            background->texture,
-            i * background->texture.width,
-            0.0f,
-            BLUE
-        );
+		DrawTexture(
+			background->texture,
+			i * background->texture.width,
+			0.0f,
+			BLUE);
 	}
 }
 
+// função que checa colisão entre o disparo e bomba
+// e incrementa pontuação em caso de colisão
+// e retira a bomba atingida da tela
 int bombDano(TIROCOLISAO *tiroColisao, ENEMY *bomb, int *pontos)
 {
 	Rectangle tiroRec =
-    {
-        tiroColisao->position.x,
-        tiroColisao->position.y,
-        tiroColisao->texture.width,
-        tiroColisao->texture.height
-    };
+		{
+			tiroColisao->position.x,
+			tiroColisao->position.y,
+			tiroColisao->texture.width,
+			tiroColisao->texture.height};
 	Rectangle bombRec =
-    {
-        bomb->position.x,
-        bomb->position.y,
-        bomb->texture.width,
-        bomb->texture.height
-    };
+		{
+			bomb->position.x,
+			bomb->position.y,
+			bomb->texture.width,
+			bomb->texture.height};
 	if (CheckCollisionRecs(tiroRec, bombRec))
 	{
 		bomb->position.x = 8888888;
 		bomb->position.y = 8888888;
-        *pontos += 200;
+		*pontos += 200;
 		return 1;
 	}
-    
-    return 0;
+
+	return 0;
 }
 
+// função que controla movimentação das bombas
+// baseado na posição do megaman e checa colisões
 int bombMovement(ENEMY *bomb, MEGAMAN *megaman, int *vidas)
 {
 	if (megaman->position.x - bomb->position.x < 100)
@@ -485,7 +501,7 @@ int bombMovement(ENEMY *bomb, MEGAMAN *megaman, int *vidas)
 		{
 			bomb->position.y = bomb->position.y - 1;
 		}
-        
+
 		if (bomb->position.y < megaman->position.y)
 		{
 			bomb->position.y = bomb->position.y + 1;
@@ -495,17 +511,18 @@ int bombMovement(ENEMY *bomb, MEGAMAN *megaman, int *vidas)
 		{
 			if (fabs(bomb->position.y - megaman->position.y) < 10.0f)
 			{
-                *vidas = *vidas - 1;
+				*vidas = *vidas - 1;
 				return 0;
 			}
 		}
-        else
-        {
-            return 1;
-        }
+		else
+		{
+			return 1;
+		}
 	}
 }
 
+// função que atualiza os parametros do modo camera
 void cameraUpdate(Camera2D *camera, MEGAMAN *megaman)
 {
 	if (megaman->position.x <= screenWidth / 2)
@@ -513,19 +530,21 @@ void cameraUpdate(Camera2D *camera, MEGAMAN *megaman)
 		camera->target.x = 0;
 		camera->offset.x = 0;
 	}
-    
+
 	if (megaman->position.x >= screenWidth / 2)
 	{
 		camera->target.x = megaman->position.x;
 		camera->offset.x = screenWidth / 2 - ((float)megaman->texture.width / 6);
 	}
-    
+
 	if (megaman->position.x >= (gameWidth - (screenWidth / 2) - (megaman->texture.width / 6)))
 	{
 		camera->target.x = gameWidth - (screenWidth / 2) - (megaman->texture.width / 6);
 	}
 }
 
+// função que que checa colisão do megaman com
+// os elementos 'parede', 'floor' e 'spike'
 bool tileMap(char matrix[][MATRIXCOLUMNS], ENEMY *bomb, MEGAMAN *megaman, BOX *floor, BOX *parede, SPIKE *spike, Sound deathSound, int *vidas, bool *acima)
 {
 	bool isColliding = false;
@@ -536,112 +555,98 @@ bool tileMap(char matrix[][MATRIXCOLUMNS], ENEMY *bomb, MEGAMAN *megaman, BOX *f
 			if (matrix[l][c] == 'B')
 			{
 				Rectangle megamanRect =
-                {
-                    megaman->position.x,
-                    megaman->position.y,
-                    megaman->width,
-                    megaman->texture.height
-                };
-                
+					{
+						megaman->position.x,
+						megaman->position.y,
+						megaman->width,
+						megaman->texture.height};
+
 				Rectangle floorRect =
-                {
-                    c * floor->texture.width,
-                    l * floor->texture.height,
-                    floor->texture.width,
-                    floor->texture.height
-                };
+					{
+						c * floor->texture.width,
+						l * floor->texture.height,
+						floor->texture.width,
+						floor->texture.height};
 				if (CheckCollisionRecs(megamanRect, floorRect))
 				{
-                    isColliding = true;
-                    
+					isColliding = true;
+
 					if (megaman->movement.y > 0)
 					{
 						megaman->position.y = floorRect.y - megaman->texture.height;
 						megaman->movement.y = 0;
-                        
-                        *acima = false;
-                        
+
+						*acima = false;
 					}
-                    
+
 					if (megaman->movement.y < 0)
 					{
-                        *acima = true;
-                        
-                        megaman->position.y = floorRect.y + floorRect.height;
-                        megaman->movement.y = 0;
+						*acima = true;
+
+						megaman->position.y = floorRect.y + floorRect.height;
+						megaman->movement.y = 0;
 					}
 				}
 
-				DrawTexture
-                (
-                    floor->texture,
-                    (c * floor->texture.width),
-                    (l * floor->texture.height),
-                    BLUE
-                );
+				DrawTexture(
+					floor->texture,
+					(c * floor->texture.width),
+					(l * floor->texture.height),
+					BLUE);
 			}
-            
+
 			if (matrix[l][c] == 'S')
 			{
-                Rectangle megamanSpikeRect = 
-                {
-                    megaman->position.x,
-                    megaman->position.y,
-                    megaman->width,
-                    megaman->texture.height
-                };
-                
-                Rectangle spikeRect =
-                {
-                    c * spike->texture.width,
-                    l * spike->texture.height,
-                    spike->texture.width,
-                    spike->texture.height
-                };
-                
-                DrawTexture
-                (
-                    spike->texture,
-                    (c * spike->texture.width),
-                    (l * spike->texture.height),
-                    ORANGE
-                );
-                
-                if (CheckCollisionRecs(megamanSpikeRect, spikeRect))
-                {
-                    PlaySound(deathSound);
-                    megaman->position.x = megaman->position.x - 100;
-                    
-                    *vidas = *vidas - 1;
-                    
-                }
+				Rectangle megamanSpikeRect =
+					{
+						megaman->position.x,
+						megaman->position.y,
+						megaman->width,
+						megaman->texture.height};
+
+				Rectangle spikeRect =
+					{
+						c * spike->texture.width,
+						l * spike->texture.height,
+						spike->texture.width,
+						spike->texture.height};
+
+				DrawTexture(
+					spike->texture,
+					(c * spike->texture.width),
+					(l * spike->texture.height),
+					ORANGE);
+
+				if (CheckCollisionRecs(megamanSpikeRect, spikeRect))
+				{
+					PlaySound(deathSound);
+					megaman->position.x = megaman->position.x - 100;
+
+					*vidas = *vidas - 1;
+				}
 			}
 			if (matrix[l][c] == 'D')
 			{
-				DrawTexture
-                (
-                    parede->texture,
-                    (c * parede->texture.width),
-                    (l * parede->texture.height),
-                    BLUE
-                );
-                
+				DrawTexture(
+					parede->texture,
+					(c * parede->texture.width),
+					(l * parede->texture.height),
+					BLUE);
+
 				Rectangle megamanRect =
-                {
-                    megaman->position.x,
-                    megaman->position.y,
-                    megaman->width,
-                    megaman->texture.height
-                };
-                
+					{
+						megaman->position.x,
+						megaman->position.y,
+						megaman->width,
+						megaman->texture.height};
+
 				Rectangle paredeRect =
-                {
-                    c * parede->texture.width,
-                    l * parede->texture.height,
-                    parede->texture.width,
-                    parede->texture.height
-                };
-                
+					{
+						c * parede->texture.width,
+						l * parede->texture.height,
+						parede->texture.width,
+						parede->texture.height};
+
 				if (CheckCollisionRecs(megamanRect, paredeRect))
 				{
 					if (megaman->movement.x < 0)
@@ -660,143 +665,142 @@ bool tileMap(char matrix[][MATRIXCOLUMNS], ENEMY *bomb, MEGAMAN *megaman, BOX *f
 	return isColliding;
 }
 
-void initBombPosition(Vector2 bombPositionArray [], ENEMY bomb [], char matrix [][MATRIXCOLUMNS])
+// função que inicializa a posição das bombas
+// baseado nos seus pontos de spawn na matriz
+void initBombPosition(Vector2 bombPositionArray[], ENEMY bomb[], char matrix[][MATRIXCOLUMNS])
 {
-    int bombCounter = 0;
-    
-    Texture2D bombTexture = LoadTexture("bomb.png");
-    
-    
-    for (int l = 0; l < MATRIXLINES; l++)
+	int bombCounter = 0;
+
+	Texture2D bombTexture = LoadTexture("bomb.png");
+
+	for (int l = 0; l < MATRIXLINES; l++)
 	{
 		for (int c = 0; c < MATRIXCOLUMNS; c++)
 		{
-            if(matrix [l][c] == 'E')
-            {
-                bombPositionArray[bombCounter] = (Vector2)
-                {
-                    c * bombTexture.width,
-                    l * bombTexture.height
-                };
-                bombCounter++;
-            }        
-        }
-    }
+			if (matrix[l][c] == 'E')
+			{
+				bombPositionArray[bombCounter] = (Vector2){
+					c * bombTexture.width,
+					l * bombTexture.height};
+				bombCounter++;
+			}
+		}
+	}
 }
 
-void initBombStructs(ENEMY bomb [NUMBOMBS], Vector2 bombPositionArray [NUMBOMBS])
+// função que inicializa as structs das cinco bombas
+// presentes no mapa
+void initBombStructs(ENEMY bomb[NUMBOMBS], Vector2 bombPositionArray[NUMBOMBS])
 {
-    for (int i = 0; i < NUMBOMBS; i++)
-    {
-        bomb [i].texture = LoadTexture("bomb.png");
-        bomb [i].position = (Vector2)
-        {
-            bombPositionArray [i].x,
-            bombPositionArray [i].y
-        };
-        bomb [i].frameRec = (Rectangle)
-        {
-            bomb [i].position.x,
-            bomb [i].position.y, 
-            bomb [i].texture.width,
-            bomb [i].texture.height
-        };
-    }
+	for (int i = 0; i < NUMBOMBS; i++)
+	{
+		bomb[i].texture = LoadTexture("bomb.png");
+		bomb[i].position = (Vector2){
+			bombPositionArray[i].x,
+			bombPositionArray[i].y};
+		bomb[i].frameRec = (Rectangle){
+			bomb[i].position.x,
+			bomb[i].position.y,
+			bomb[i].texture.width,
+			bomb[i].texture.height};
+	}
 }
 
-void initMegamanStruct(MEGAMAN *megaman, char matrix [][MATRIXCOLUMNS])
+// função que inicializa a struct do megaman
+void initMegamanStruct(MEGAMAN *megaman, char matrix[][MATRIXCOLUMNS])
 {
-    megaman->texture = (Texture2D)LoadTexture("megamanWalking.png");
+	megaman->texture = (Texture2D)LoadTexture("megamanWalking.png");
 	megaman->movement = (Vector2){0, 0};
 	megaman->numTiles = (int)3;
 	megaman->width = (float)((float)megaman->texture.width / (float)megaman->numTiles);
 	megaman->speed = 5;
 	megaman->gravity = 1;
 	initMegamanPosition(&megaman, matrix);
-	megaman->frameRec = (Rectangle)
-    {
-        megaman->position.x,
-        megaman->position.y,
-        megaman->width,
-        megaman->texture.height
-    };
+	megaman->frameRec = (Rectangle){
+		megaman->position.x,
+		megaman->position.y,
+		megaman->width,
+		megaman->texture.height};
 }
 
+// função que checa se megaman chegou ao checkpoint final do mapa
 bool arrivedAtCheckpoint(MEGAMAN *megaman, CHECKPOINT *checkpoint)
 {
-    Rectangle megamanRect = (Rectangle)
-    {
-        megaman->position.x,
-        megaman->position.y,
-        megaman->width,
-        megaman->texture.height
-    };
-    
-    Rectangle checkpointRect = (Rectangle)
-    {
-        checkpoint->position.x,
-        checkpoint->position.y,
-        checkpoint->texture.width,
-        checkpoint->texture.height
-    };
-    
-    if (CheckCollisionRecs(megamanRect, checkpointRect))
-        return true;
-    else 
-        return false;
+	Rectangle megamanRect = (Rectangle){
+		megaman->position.x,
+		megaman->position.y,
+		megaman->width,
+		megaman->texture.height};
+
+	Rectangle checkpointRect = (Rectangle){
+		checkpoint->position.x,
+		checkpoint->position.y,
+		checkpoint->texture.width,
+		checkpoint->texture.height};
+
+	if (CheckCollisionRecs(megamanRect, checkpointRect))
+		return true;
+	else
+		return false;
 }
 
+// função principal da gameplay
 int gameplay()
 {
+	// inicialização de variáveis locais
 	char matrix[MATRIXLINES][MATRIXCOLUMNS];
 	readMatrix(matrix);
 	bool isMegamanJumping = false;
-    bool acima = false;
+	bool acima = false;
 	unsigned frameDelay = 5;
 	unsigned frameDelayCounter = 0;
-    unsigned endFrameDelay = 100;
-    unsigned endFrameDelayCounter = 0;
+	unsigned endFrameDelay = 100;
+	unsigned endFrameDelayCounter = 0;
 	int xStartingPosition = 30;
 	int correcaoTiro;
-    int pontos = 0;
-    int vidas = 5;
-    int pontosPositionUpdate = 0;
-    int vidaPositionUpdate = 0;
-    char pontosTexto [20];
-    char vidaTexto [20];
-    
-    
-    int megamanPosXTemp = 0;
-    int megamanPosYTemp = 0;
-    
+	int pontos = 0;
+	int vidas = 5;
+	int pontosPositionUpdate = 0;
+	int vidaPositionUpdate = 0;
+	char pontosTexto[20];
+	char vidaTexto[20];
+
+	int megamanPosXTemp = 0;
+	int megamanPosYTemp = 0;
+
 	InitWindow(screenWidth, screenHeight, "GAMEPLAY");
 
 	MEGAMAN megaman;
-    initMegamanStruct(&megaman, matrix);
-        
-    // i hope this works
-    ENEMY bomb [NUMBOMBS];
-    Vector2 bombPositionArray [NUMBOMBS];
-    initBombPosition(bombPositionArray, bomb, matrix);
-    initBombStructs(bomb, bombPositionArray);
-    
+	initMegamanStruct(&megaman, matrix);
+
+	// declarações referentes às bombas
+	ENEMY bomb[NUMBOMBS];
+	Vector2 bombPositionArray[NUMBOMBS];
+	initBombPosition(bombPositionArray, bomb, matrix);
+	initBombStructs(bomb, bombPositionArray);
+
+	// declarações referentes ao background
 	BACKGROUND background;
 	background.texture = LoadTexture("background.png");
-    
-    Texture2D gameOver = LoadTexture("blackoutSkull.png");
-    Texture2D paredeT = LoadTexture("box.png");
-    
+
+	Texture2D gameOver = LoadTexture("blackoutSkull.png");
+	Texture2D paredeT = LoadTexture("box.png");
+	
+	// declarações referentes às paredes
 	BOX parede;
 	initParedePosition(matrix, &parede);
 	parede.texture = paredeT;
-    
+
+	// declarações referentes ao chão
 	BOX floor;
 	initFloorPosition(matrix, &floor);
 	floor.texture = paredeT;
-    
+
+	// declarações referentes aos spikes
 	SPIKE spike;
 	spike.texture = LoadTexture("spike.png");
 
+	// declarações referentes ao disparo
 	TIRO tiro;
 	tiro.texture = LoadTexture("laser.png");
 	tiro.position = (Vector2){999999999, 99999999};
@@ -804,39 +808,35 @@ int gameplay()
 	TIROCOLISAO tiroColisao;
 	tiroColisao.texture = LoadTexture("colisaolaser.png");
 	tiroColisao.position = (Vector2){999999999, 99999999};
-	tiroColisao.frameRec = (Rectangle)
-    {
-        tiroColisao.position.x,
-        tiroColisao.position.y,
-        tiroColisao.texture.width,
-        tiroColisao.texture.height
-    };
-    
-    CHECKPOINT checkpoint;
-    checkpoint.texture = LoadTexture("colisao.png");
-    checkpoint.position = (Vector2)
-    {
-        gameWidth - checkpoint.texture.width,
-        390
-    };
-    
+	tiroColisao.frameRec = (Rectangle){
+		tiroColisao.position.x,
+		tiroColisao.position.y,
+		tiroColisao.texture.width,
+		tiroColisao.texture.height};
+
+	// declarações referentes ao checkpoint
+	CHECKPOINT checkpoint;
+	checkpoint.texture = LoadTexture("colisao.png");
+	checkpoint.position = (Vector2){
+		gameWidth - checkpoint.texture.width,
+		390};
+
+	// declarações referentes ao modo camera
 	Camera2D camera;
 	initCameraSettings(&camera, &megaman);
-    
+
 	Vector2 TempTiro = (Vector2){999999999, 99999999};
-    
+
 	InitAudioDevice();
 	Music musica = LoadMusicStream("musica.mp3");
 	Sound tiroSound = LoadSound("tiro.mp3");
-    Sound deathSound = LoadSound("manDeathScream.ogg");
-    //  moreteSound = LoadSound("maleVoiceScreamingLoudly.wav");
-    Sound jumpSound = LoadSound("jump.mp3");
-    
-    SetTargetFPS(60);
-    
-    PlayMusicStream(musica);
+	Sound deathSound = LoadSound("manDeathScream.ogg");
+	Sound jumpSound = LoadSound("jump.mp3");
 
-    
+	SetTargetFPS(60);
+
+	PlayMusicStream(musica);
+
 	while (!WindowShouldClose())
 	{
 		UpdateMusicStream(musica);
@@ -844,119 +844,114 @@ int gameplay()
 		ClearBackground(WHITE);
 		BeginMode2D(camera);
 		drawBackground(&background);
-        
-        pontosPositionUpdate = 0;
-		
-        DrawTexture(checkpoint.texture, checkpoint.position.x, checkpoint.position.y, GRAY);
-        
-        if (arrivedAtCheckpoint(&megaman, &checkpoint))
-        {
-            return pontos;
-        }
-        
-        if (vidas < 0)
-        {
-            vidas = 0;
-        }
-        
-        if (megaman.position.x > screenWidth / 2)
-        {
-            vidaPositionUpdate = 25 + megaman.position.x - screenWidth / 2 ;
-        }
-        if (megaman.position.x >= (gameWidth - (screenWidth / 2) - (megaman.texture.width / 6))){
-            
-            vidaPositionUpdate =  gameWidth - (screenWidth / 2) - (megaman.texture.width / 6) - 575 ;
-        }
-        
 
-        if (megaman.position.x > screenWidth / 2)
-        {
-            pontosPositionUpdate = 25 + megaman.position.x - screenWidth / 2 ;
-        }
-        
-        if (megaman.position.x >= (gameWidth - (screenWidth / 2) - (megaman.texture.width / 6)))
-        {
-            pontosPositionUpdate =  gameWidth - (screenWidth / 2) - (megaman.texture.width / 6) - 575 ;      
-        }
+		pontosPositionUpdate = 0;
 
-        sprintf(pontosTexto, "Pontos: %d", pontos);
-        
-        DrawText
-        (   
-            pontosTexto,
-            10 + pontosPositionUpdate,
-            10,
-            20,
-            ORANGE
-        ); 
+		DrawTexture(checkpoint.texture, checkpoint.position.x, checkpoint.position.y, GRAY);
 
-        sprintf(vidaTexto, "Vida: %d", vidas);
-        DrawText
-        (
-            vidaTexto,
-            300 + vidaPositionUpdate,
-            10,
-            20,
-            ORANGE
-        ); 
-        
-        bool isColliding = tileMap(matrix, &bomb [0], &megaman, &floor, &parede, &spike, deathSound, &vidas, &acima);
+		// se magaman chegou ao checkpoint
+		if (arrivedAtCheckpoint(&megaman, &checkpoint))
+		{
+			return pontos;
+		}
 
+		// não deixa mostrar valor negativo de vidas
+		if (vidas < 0)
+		{
+			vidas = 0;
+		}
+
+		// correções da UI
+		if (megaman.position.x > screenWidth / 2)
+		{
+			vidaPositionUpdate = 25 + megaman.position.x - screenWidth / 2;
+		}
+		if (megaman.position.x >= (gameWidth - (screenWidth / 2) - (megaman.texture.width / 6)))
+		{
+			vidaPositionUpdate = gameWidth - (screenWidth / 2) - (megaman.texture.width / 6) - 575;
+		}
+
+		if (megaman.position.x > screenWidth / 2)
+		{
+			pontosPositionUpdate = 25 + megaman.position.x - screenWidth / 2;
+		}
+
+		if (megaman.position.x >= (gameWidth - (screenWidth / 2) - (megaman.texture.width / 6)))
+		{
+			pontosPositionUpdate = gameWidth - (screenWidth / 2) - (megaman.texture.width / 6) - 575;
+		}
+
+		// mostragem da UI
+		sprintf(pontosTexto, "Pontos: %d", pontos);
+		DrawText(
+			pontosTexto,
+			10 + pontosPositionUpdate,
+			10,
+			20,
+			ORANGE);
+
+		sprintf(vidaTexto, "Vida: %d", vidas);
+		DrawText(
+			vidaTexto,
+			300 + vidaPositionUpdate,
+			10,
+			20,
+			ORANGE);
+
+		bool isColliding = tileMap(matrix, &bomb[0], &megaman, &floor, &parede, &spike, deathSound, &vidas, &acima);
+
+		// movimentação do megaman
 		if (isColliding)
 		{
 			isMegamanJumping = false;
 		}
-        
+
 		else
 		{
 			isMegamanJumping = true;
 		}
-        
+
 		if (IsKeyPressed(KEY_C))
 		{
 			PlaySound(tiroSound);
 		}
-        
+
 		if (IsKeyDown(KEY_C))
 		{
 			atualizaTiro(&tiro, megaman.position);
 			drawTiro(tiro, correcaoTiro);
-            DrawTextureRec
-            (
-                tiroColisao.texture,
-                tiroColisao.frameRec,
-                tiroColisao.position,
-                WHITE
-            );
+			DrawTextureRec(
+				tiroColisao.texture,
+				tiroColisao.frameRec,
+				tiroColisao.position,
+				WHITE);
 			tiroColisao.position.x = tiro.position.x - correcaoTiro;
 			tiroColisao.position.y = tiro.position.y;
 		}
-        
+
 		else
 		{
 			tiroColisao.position = (Vector2){999999999, 99999999};
 			atualizaTiro(&tiro, TempTiro);
 		}
-        
-		if (IsKeyDown(KEY_W) && (isColliding)  && !acima)
+
+		if (IsKeyDown(KEY_W) && (isColliding) && !acima)
 		{
-            PlaySound(jumpSound);
+			PlaySound(jumpSound);
 			megaman.movement.y = -4 * megaman.speed + megaman.gravity;
 			DrawTextureRec(megaman.texture, megaman.frameRec, megaman.position, WHITE);
-            isMegamanJumping = true;
+			isMegamanJumping = true;
 		}
-        
+
 		else if (IsKeyDown(KEY_A))
 		{
 			correcaoTiro = 130;
 			isMegamanJumping = false;
-			DrawTextureRec
-            (
-                megaman.texture,
-                megaman.frameRec,
-                megaman.position,
-                WHITE
-            );
+			DrawTextureRec(
+				megaman.texture,
+				megaman.frameRec,
+				megaman.position,
+				WHITE);
 			megaman.movement.x = -megaman.speed;
 			if (megaman.frameRec.width > 0)
 				megaman.frameRec.width = -megaman.frameRec.width;
@@ -967,7 +962,7 @@ int gameplay()
 				frameDelayCounter = 0;
 			}
 		}
-        
+
 		else if (IsKeyDown(KEY_D))
 		{
 			correcaoTiro = -30;
@@ -983,274 +978,263 @@ int gameplay()
 				frameDelayCounter = 0;
 			}
 		}
-        
+
 		else if (isColliding)
 		{
 			isMegamanJumping = false;
-			DrawTextureRec
-            (
-                megaman.texture,
-                megaman.frameRec,
-                megaman.position,
-                WHITE
-            );
+			DrawTextureRec(
+				megaman.texture,
+				megaman.frameRec,
+				megaman.position,
+				WHITE);
 			megaman.movement.x = 0;
 			if (megaman.frameRec.width > 0)
 				megaman.frameRec.width = +megaman.frameRec.width;
 		}
-        
+
 		else
 		{
 			isMegamanJumping = true;
-			DrawTextureRec
-            (
-                megaman.texture,
-                megaman.frameRec,
-                megaman.position,
-                WHITE
-            );
+			DrawTextureRec(
+				megaman.texture,
+				megaman.frameRec,
+				megaman.position,
+				WHITE);
 		}
-        
+
 		megaman.position = Vector2Add(megaman.position, megaman.movement);
 		megaman.movement.y += megaman.gravity;
-        
+
 		if (megaman.position.x < xStartingPosition - (megaman.texture.width / 6))
 		{
 			megaman.position.x = xStartingPosition - (megaman.texture.width / 6);
 		}
-        
+
 		if (megaman.position.x > gameWidth - (megaman.texture.width / 3))
 		{
 			megaman.position.x = gameWidth - (megaman.texture.width / 3);
 		}
-        
-		DrawTextureRec
-        (
-            bomb [0].texture,
-            bomb [0].frameRec,
-            bomb [0].position,
-            WHITE
-        );
-		DrawTextureRec
-        (
-            bomb [1].texture,
-            bomb [1].frameRec,
-            bomb [1].position,
-            WHITE
-        );
-        DrawTextureRec
-        (
-            bomb [2].texture,
-            bomb [2].frameRec,
-            bomb [2].position,
-            WHITE
-        );
-        DrawTextureRec
-        (
-            bomb [3].texture,
-            bomb [3].frameRec,
-            bomb [3].position,
-            WHITE
-        );
-		DrawTextureRec
-        (
-            bomb [4].texture,
-            bomb [4].frameRec,
-            bomb [4].position,
-            WHITE
-        );
-        
-        megamanPosXTemp = megaman.position.x;
-        megamanPosYTemp = megaman.position.y;
-        
-		if (bombMovement(&bomb [0], &megaman, &vidas) == 0)
-        {
-			PlaySound(deathSound);
-            megaman.position.x = megaman.position.x - 300;
-            bomb[0].position.x = bomb[0].position.x + 300;
-            bomb[0].position.y = bomb[0].position.y - 100;
-        }
-        
-		if (bombMovement(&bomb [1], &megaman, &vidas) == 0)
-        {		
-            PlaySound(deathSound);
-            megaman.position.x = megaman.position.x - 100;
-            bomb[1].position.x = bomb[0].position.x + 300;
-            bomb[1].position.y = bomb[0].position.y - 100;
-        }       
-        
-        if (bombMovement(&bomb [2], &megaman, &vidas) == 0)
-        {
-            PlaySound(deathSound);
-            megaman.position.x = megaman.position.x - 100;
-            bomb[2].position.x = bomb[2].position.x + 300;
-            bomb[2].position.y = bomb[2].position.y - 100;
-        }
-        
-        if (bombMovement(&bomb [3], &megaman, &vidas) == 0)
+
+		// desenho das bombas
+		DrawTextureRec(
+			bomb[0].texture,
+			bomb[0].frameRec,
+			bomb[0].position,
+			WHITE);
+		DrawTextureRec(
+			bomb[1].texture,
+			bomb[1].frameRec,
+			bomb[1].position,
+			WHITE);
+		DrawTextureRec(
+			bomb[2].texture,
+			bomb[2].frameRec,
+			bomb[2].position,
+			WHITE);
+		DrawTextureRec(
+			bomb[3].texture,
+			bomb[3].frameRec,
+			bomb[3].position,
+			WHITE);
+		DrawTextureRec(
+			bomb[4].texture,
+			bomb[4].frameRec,
+			bomb[4].position,
+			WHITE);
+
+		megamanPosXTemp = megaman.position.x;
+		megamanPosYTemp = megaman.position.y;
+
+		// ajustes de posição em caso de colisão com bombas
+		if (bombMovement(&bomb[0], &megaman, &vidas) == 0)
 		{
-            PlaySound(deathSound);
-            megaman.position.x = megaman.position.x - 100;
-            bomb[3].position.x = bomb[3].position.x + 300;
-            bomb[3].position.y = bomb[3].position.y - 100;
-        }
-        
-        if (bombMovement(&bomb [4], &megaman, &vidas) == 0)		
-        {	
-            PlaySound(deathSound);
-            megaman.position.x = megaman.position.x - 100;
-            bomb[4].position.x = bomb[4].position.x + 300;
-            bomb[4].position.y = bomb[4].position.y - 100;
-        }
-        
-        bombDano(&tiroColisao, &bomb [0], &pontos);
-        bombDano(&tiroColisao, &bomb [1], &pontos);
-        bombDano(&tiroColisao, &bomb [2], &pontos);
-        bombDano(&tiroColisao, &bomb [3], &pontos);
-        bombDano(&tiroColisao, &bomb [4], &pontos);
+			PlaySound(deathSound);
+			megaman.position.x = megaman.position.x - 300;
+			bomb[0].position.x = bomb[0].position.x + 300;
+			bomb[0].position.y = bomb[0].position.y - 100;
+		}
+
+		if (bombMovement(&bomb[1], &megaman, &vidas) == 0)
+		{
+			PlaySound(deathSound);
+			megaman.position.x = megaman.position.x - 100;
+			bomb[1].position.x = bomb[0].position.x + 300;
+			bomb[1].position.y = bomb[0].position.y - 100;
+		}
+
+		if (bombMovement(&bomb[2], &megaman, &vidas) == 0)
+		{
+			PlaySound(deathSound);
+			megaman.position.x = megaman.position.x - 100;
+			bomb[2].position.x = bomb[2].position.x + 300;
+			bomb[2].position.y = bomb[2].position.y - 100;
+		}
+
+		if (bombMovement(&bomb[3], &megaman, &vidas) == 0)
+		{
+			PlaySound(deathSound);
+			megaman.position.x = megaman.position.x - 100;
+			bomb[3].position.x = bomb[3].position.x + 300;
+			bomb[3].position.y = bomb[3].position.y - 100;
+		}
+
+		if (bombMovement(&bomb[4], &megaman, &vidas) == 0)
+		{
+			PlaySound(deathSound);
+			megaman.position.x = megaman.position.x - 100;
+			bomb[4].position.x = bomb[4].position.x + 300;
+			bomb[4].position.y = bomb[4].position.y - 100;
+		}
+		
+		// checagem de colisão entre disparo e bombas
+		bombDano(&tiroColisao, &bomb[0], &pontos);
+		bombDano(&tiroColisao, &bomb[1], &pontos);
+		bombDano(&tiroColisao, &bomb[2], &pontos);
+		bombDano(&tiroColisao, &bomb[3], &pontos);
+		bombDano(&tiroColisao, &bomb[4], &pontos);
 
 		cameraUpdate(&camera, &megaman);
-        
-        megamanPosXTemp = megaman.position.x;
-        megamanPosYTemp = megaman.position.y;
-         
-        // if (vidas == 1)
-        // {
-        //     deathSound = moreteSound; 
-        // }
-        
-        if (vidas == 0)
-        {
-            break;
-        }
-        
-        EndDrawing();
-        
+
+		megamanPosXTemp = megaman.position.x;
+		megamanPosYTemp = megaman.position.y;
+
+		// if (vidas == 1)
+		// {
+		//     deathSound = moreteSound;
+		// }
+
+		if (vidas == 0)
+		{
+			break;
+		}
+
+		EndDrawing();
 	}
 	CloseAudioDevice();
 	CloseWindow();
-	return 0; // in order to use in main()
+	return 0;
 }
 
+// função principal
 int main()
 {
-    POSICOES leaderboard [NUMJOG];
-    // binaryFileRead(leaderboard);
-    // call necessary binary file function
-    int pontos;
-    int option = 0;
-    char nomeJog [12];
-    char tempNomeJog [12];
+	POSICOES leaderboard[NUMJOG];
+	int pontos;
+	int option = 0;
+	char nomeJog[12];
+	char tempNomeJog[12];
 
-    while (option != EXIT)
-    {        
-        option = menu();
-        
-        binaryFileRead(leaderboard);
-        
-        
-        if(option == PLAY)
-        {
-            // call game function / loop
-            pontos = gameplay();
-        
-            if (pontos > leaderboard[0].pontuacao)
-            {
-                leaderboard [4] = leaderboard [3];
-                leaderboard [3] = leaderboard [2];
-                leaderboard [2] = leaderboard [1];
-                leaderboard [1] = leaderboard [0];
-                
-                leaderboard [0].pontuacao = pontos; // FUNCIONA
-                enterPlayerName(nomeJog);
-                strcpy(leaderboard [0].nomeJog, nomeJog);
-                // leaderboard [i] = {nomeJog, pontos};
-                binaryFileSave(leaderboard);
-            }
-            else if (pontos > leaderboard[1].pontuacao)
-            {
-                strcpy(tempNomeJog, leaderboard [0].nomeJog);
-                printf("%s", tempNomeJog);
-                strcpy(leaderboard [0].nomeJog, tempNomeJog);
-                
-                leaderboard [4] = leaderboard [3];
-                leaderboard [3] = leaderboard [2];
-                leaderboard [2] = leaderboard [1];
-                
-                leaderboard [1].pontuacao = pontos; // FUNCIONA
-                enterPlayerName(nomeJog);
-                strcpy(leaderboard [1].nomeJog, nomeJog);
-                // leaderboard [i] = {nomeJog, pontos};
-                
-                binaryFileSave(leaderboard);
-            }
-            else if (pontos > leaderboard[2].pontuacao)
-            {
-                strcpy(tempNomeJog, leaderboard [0].nomeJog);
-                printf("%s", tempNomeJog);
-                strcpy(leaderboard [0].nomeJog, tempNomeJog);
-                
-                leaderboard [4] = leaderboard [3];
-                leaderboard [3] = leaderboard [2];
-                
-                leaderboard [2].pontuacao = pontos; // FUNCIONA
-                enterPlayerName(nomeJog);
-                strcpy(leaderboard [2].nomeJog, nomeJog);
-                // leaderboard [i] = {nomeJog, pontos};
-                
-                binaryFileSave(leaderboard);
-            }
-            else if (pontos > leaderboard[3].pontuacao)
-            {
-                strcpy(tempNomeJog, leaderboard [0].nomeJog);
-                printf("%s", tempNomeJog);
-                strcpy(leaderboard [0].nomeJog, tempNomeJog);
-                
-                leaderboard [4] = leaderboard [3];
-                
-                leaderboard [3].pontuacao = pontos; // FUNCIONA
-                enterPlayerName(nomeJog);
-                strcpy(leaderboard [3].nomeJog, nomeJog);
-                // leaderboard [i] = {nomeJog, pontos};
-                
-                binaryFileSave(leaderboard);
-            }
-            else if (pontos > leaderboard[4].pontuacao)
-            {
-                strcpy(tempNomeJog, leaderboard [0].nomeJog);
-                printf("%s", tempNomeJog);
-                strcpy(leaderboard [0].nomeJog, tempNomeJog);
-                
-                leaderboard [4].pontuacao = pontos; // FUNCIONA
-                enterPlayerName(nomeJog);
-                strcpy(leaderboard [4].nomeJog, nomeJog);
-                // leaderboard [i] = {nomeJog, pontos};
-                
-                binaryFileSave(leaderboard);
-            }
-        }
-        
-        if(option == LEADERBOARD)
-        {        
-            binaryFileRead(leaderboard);
-            binaryFilePrint(leaderboard);
-            
-            printf("%s -", leaderboard [0].nomeJog);
-            printf(" %d\n", leaderboard [0].pontuacao);
-            printf("%s -", leaderboard [1].nomeJog);
-            printf(" %d\n", leaderboard [1].pontuacao);
-            printf("%s -", leaderboard [2].nomeJog);
-            printf(" %d\n", leaderboard [2].pontuacao);
-            printf("%s -", leaderboard [3].nomeJog);
-            printf(" %d\n", leaderboard [3].pontuacao);
-            printf("%s -", leaderboard [4].nomeJog);
-            printf(" %d\n", leaderboard [4].pontuacao);
-        }
-        
-        if(option == EXIT)
-        {
-            return 0;
-        }
-    }
-    return 0;
+	while (option != EXIT)
+	{
+		// função de menu retorna opção escolhida
+		option = menu();
+
+		binaryFileRead(leaderboard);
+
+		if (option == PLAY)
+		{
+			// chama função da gameplay
+			// gameplay retorna pontos
+			pontos = gameplay();
+
+			// checagem dos pontos quanto ao leaderboard
+			if (pontos > leaderboard[0].pontuacao)
+			{
+				leaderboard[4] = leaderboard[3];
+				leaderboard[3] = leaderboard[2];
+				leaderboard[2] = leaderboard[1];
+				leaderboard[1] = leaderboard[0];
+
+				leaderboard[0].pontuacao = pontos;
+				enterPlayerName(nomeJog);
+				strcpy(leaderboard[0].nomeJog, nomeJog);
+				// leaderboard [i] = {nomeJog, pontos};
+				binaryFileSave(leaderboard);
+			}
+			else if (pontos > leaderboard[1].pontuacao)
+			{
+				strcpy(tempNomeJog, leaderboard[0].nomeJog);
+				printf("%s", tempNomeJog);
+				strcpy(leaderboard[0].nomeJog, tempNomeJog);
+
+				leaderboard[4] = leaderboard[3];
+				leaderboard[3] = leaderboard[2];
+				leaderboard[2] = leaderboard[1];
+
+				leaderboard[1].pontuacao = pontos;
+				enterPlayerName(nomeJog);
+				strcpy(leaderboard[1].nomeJog, nomeJog);
+				// leaderboard [i] = {nomeJog, pontos};
+
+				binaryFileSave(leaderboard);
+			}
+			else if (pontos > leaderboard[2].pontuacao)
+			{
+				strcpy(tempNomeJog, leaderboard[0].nomeJog);
+				printf("%s", tempNomeJog);
+				strcpy(leaderboard[0].nomeJog, tempNomeJog);
+
+				leaderboard[4] = leaderboard[3];
+				leaderboard[3] = leaderboard[2];
+
+				leaderboard[2].pontuacao = pontos;
+				enterPlayerName(nomeJog);
+				strcpy(leaderboard[2].nomeJog, nomeJog);
+				// leaderboard [i] = {nomeJog, pontos};
+
+				binaryFileSave(leaderboard);
+			}
+			else if (pontos > leaderboard[3].pontuacao)
+			{
+				strcpy(tempNomeJog, leaderboard[0].nomeJog);
+				printf("%s", tempNomeJog);
+				strcpy(leaderboard[0].nomeJog, tempNomeJog);
+
+				leaderboard[4] = leaderboard[3];
+
+				leaderboard[3].pontuacao = pontos;
+				enterPlayerName(nomeJog);
+				strcpy(leaderboard[3].nomeJog, nomeJog);
+				// leaderboard [i] = {nomeJog, pontos};
+
+				binaryFileSave(leaderboard);
+			}
+			else if (pontos > leaderboard[4].pontuacao)
+			{
+				strcpy(tempNomeJog, leaderboard[0].nomeJog);
+				printf("%s", tempNomeJog);
+				strcpy(leaderboard[0].nomeJog, tempNomeJog);
+
+				leaderboard[4].pontuacao = pontos;
+				enterPlayerName(nomeJog);
+				strcpy(leaderboard[4].nomeJog, nomeJog);
+				// leaderboard [i] = {nomeJog, pontos};
+
+				binaryFileSave(leaderboard);
+			}
+		}
+
+		if (option == LEADERBOARD)
+		{
+			binaryFileRead(leaderboard); // le arquivo binário
+			binaryFilePrint(leaderboard); // imprime struct
+
+			printf("%s -", leaderboard[0].nomeJog);
+			printf(" %d\n", leaderboard[0].pontuacao);
+			printf("%s -", leaderboard[1].nomeJog);
+			printf(" %d\n", leaderboard[1].pontuacao);
+			printf("%s -", leaderboard[2].nomeJog);
+			printf(" %d\n", leaderboard[2].pontuacao);
+			printf("%s -", leaderboard[3].nomeJog);
+			printf(" %d\n", leaderboard[3].pontuacao);
+			printf("%s -", leaderboard[4].nomeJog);
+			printf(" %d\n", leaderboard[4].pontuacao);
+		}
+
+		if (option == EXIT)
+		{
+			return 0; // fecha a janela
+		}
+	}
+	return 0;
 }
