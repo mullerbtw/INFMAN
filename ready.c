@@ -660,7 +660,7 @@ bool tileMap(char matrix[][MATRIXCOLUMNS], ENEMY *bomb, MEGAMAN *megaman, BOX *f
                 {
                     PlaySound(deathSound);
                     
-                    *deathPosx = megaman->position.x;
+                    *deathPosX = megaman->position.x;
                     *deathPosY = megaman->position.y;
                     megaman->position.x = megaman->position.x - 100;
                     
