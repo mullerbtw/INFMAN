@@ -27,12 +27,9 @@ typedef struct
 {
 	Texture2D texture;
 	Vector2 movement;
-	unsigned numTiles;
-	float width;
 	int speed;
 	int gravity;
 	Vector2 position;
-	Rectangle frameRec;
 } MEGAMAN;
 
 typedef struct
@@ -382,7 +379,7 @@ void initMegamanPosition(MEGAMAN **megaman, char matrix[][MATRIXCOLUMNS])
 			{
 				(*megaman)->position = (Vector2){
 					(c * (*megaman)->texture.width),
-					(l * (*megaman)->texture.height)};
+					(l * (*megaman)->texture.height - 400)};
 			}
 		}
 	}
@@ -459,20 +456,18 @@ int bombDano(TIROCOLISAO *tiroColisao, ENEMY *bomb, int *pontos)
 {
 	
 	// define retângulo de colisão do laser que aparece em cima do laser.
-	Rectangle tiroRec =
-		{
-			tiroColisao->position.x,
-			tiroColisao->position.y,
-			tiroColisao->texture.width,
-			tiroColisao->texture.height};
+	Rectangle tiroRec = {
+        tiroColisao->position.x,
+        tiroColisao->position.y,
+        tiroColisao->texture.width,
+        tiroColisao->texture.height};
 
 	// define retângulo de colisão do inimigo
-	Rectangle bombRec =
-		{
-			bomb->position.x,
-			bomb->position.y,
-			bomb->texture.width,
-			bomb->texture.height};
+	Rectangle bombRec = {
+        bomb->position.x,
+        bomb->position.y,
+        bomb->texture.width,
+        bomb->texture.height};
 
 	// se o retângulo colisão do laser colidir com o retangulo de colisão do inimigo
     // ele manda o inimigo para uma posição absurdamente longe no mapa. é como se morresse
@@ -493,8 +488,6 @@ int bombDano(TIROCOLISAO *tiroColisao, ENEMY *bomb, int *pontos)
 // baseado na posição do megaman e checa colisões
 int bombMovement(ENEMY *bomb, MEGAMAN *megaman, int *vidas, int *deathPosX, int *deathPosY )
 {
-    
-    
     // se o megaman estiver a 100 unidades próximo de um inimigo
     // o inimigo começa a perseguir ele
 	if (megaman->position.x - bomb->position.x < 100)
@@ -565,7 +558,6 @@ void cameraUpdate(Camera2D *camera, MEGAMAN *megaman)
 // os elementos 'parede', 'floor' e 'spike'
 bool tileMap(char matrix[][MATRIXCOLUMNS], ENEMY *bomb, MEGAMAN *megaman, BOX *floor, BOX *parede, SPIKE *spike, Sound deathSound, int *vidas, bool *acima, int *deathPosX, int *deathPosY)
 {
-
 	// inicaliza "isColliding" como false
     // vai ser usada depois para definir os pulos
 	bool isColliding = false;
@@ -582,7 +574,7 @@ bool tileMap(char matrix[][MATRIXCOLUMNS], ENEMY *bomb, MEGAMAN *megaman, BOX *f
                 {
                     megaman->position.x,
                     megaman->position.y,
-                    megaman->width,
+                    megaman->texture.width,
                     megaman->texture.height
                 };
                 
@@ -595,8 +587,6 @@ bool tileMap(char matrix[][MATRIXCOLUMNS], ENEMY *bomb, MEGAMAN *megaman, BOX *f
                 };
 				if (CheckCollisionRecs(megamanRect, floorRect))
 				{
-
-
 					// se o retângulo de colisão do megaman colidir com o retangulo de chão do chão, ele é empurrado
                     // se estiver acima, empurrado acima. se embaixo, pra baixo
                     isColliding = true;
@@ -607,12 +597,10 @@ bool tileMap(char matrix[][MATRIXCOLUMNS], ENEMY *bomb, MEGAMAN *megaman, BOX *f
 						megaman->movement.y = 0;
                         
                         *acima = false;
-                        
 					}
                     
 					if (megaman->movement.y < 0)
 					{
-
 						// "*acima" impede que ele pule pra sempre se colidindo com o retnagulo acima dele
                         *acima = true;
                         
@@ -636,7 +624,7 @@ bool tileMap(char matrix[][MATRIXCOLUMNS], ENEMY *bomb, MEGAMAN *megaman, BOX *f
                 {
                     megaman->position.x,
                     megaman->position.y,
-                    megaman->width,
+                    megaman->texture.width,
                     megaman->texture.height
                 };
                 
@@ -664,15 +652,11 @@ bool tileMap(char matrix[][MATRIXCOLUMNS], ENEMY *bomb, MEGAMAN *megaman, BOX *f
                     *deathPosY = megaman->position.y;
                     megaman->position.x = megaman->position.x - 100;
                     
-                     
-                    
                     *vidas = *vidas - 1;
-                    
                 }
 			}
 			if (matrix[l][c] == 'D')
 			{
-
 				// mesma coisa que o "B" mas para paredes ao invés de chão
                 // empurra ele para esquerda ou direita
 				DrawTexture
@@ -687,7 +671,7 @@ bool tileMap(char matrix[][MATRIXCOLUMNS], ENEMY *bomb, MEGAMAN *megaman, BOX *f
                 {
                     megaman->position.x,
                     megaman->position.y,
-                    megaman->width,
+                    megaman->texture.width,
                     megaman->texture.height
                 };
                 
@@ -708,7 +692,7 @@ bool tileMap(char matrix[][MATRIXCOLUMNS], ENEMY *bomb, MEGAMAN *megaman, BOX *f
 
 					if (megaman->movement.x > 0)
 					{
-						megaman->position.x = paredeRect.x - megaman->width;
+						megaman->position.x = paredeRect.x - megaman->texture.width;
 					}
 				}
 			}
@@ -763,16 +747,9 @@ void initMegamanStruct(MEGAMAN *megaman, char matrix[][MATRIXCOLUMNS])
 {
 	megaman->texture = (Texture2D)LoadTexture("megamanWalking.png");
 	megaman->movement = (Vector2){0, 0};
-	megaman->numTiles = (int)3;
-	megaman->width = (float)((float)megaman->texture.width / (float)megaman->numTiles);
 	megaman->speed = 5;
 	megaman->gravity = 1;
 	initMegamanPosition(&megaman, matrix);
-	megaman->frameRec = (Rectangle){
-		megaman->position.x,
-		megaman->position.y,
-		megaman->width,
-		megaman->texture.height};
 }
 
 // função que checa se megaman chegou ao checkpoint final do mapa
@@ -781,7 +758,7 @@ bool arrivedAtCheckpoint(MEGAMAN *megaman, CHECKPOINT *checkpoint)
 	Rectangle megamanRect = (Rectangle){
 		megaman->position.x,
 		megaman->position.y,
-		megaman->width,
+		megaman->texture.width,
 		megaman->texture.height};
 
 	Rectangle checkpointRect = (Rectangle){
@@ -914,9 +891,9 @@ int gameplay()
 		{
 			vidaPositionUpdate = 25 + megaman.position.x - screenWidth / 2;
 		}
-		if (megaman.position.x >= (gameWidth - (screenWidth / 2) - (megaman.texture.width / 6)))
+		if (megaman.position.x >= (gameWidth - (screenWidth / 2) - (megaman.texture.width / 2)))
 		{
-			vidaPositionUpdate = gameWidth - (screenWidth / 2) - (megaman.texture.width / 6) - 575;
+			vidaPositionUpdate = gameWidth - (screenWidth / 2) - (megaman.texture.width / 2) - 575;
 		}
 
 		if (megaman.position.x > screenWidth / 2)
@@ -924,9 +901,9 @@ int gameplay()
 			pontosPositionUpdate = 25 + megaman.position.x - screenWidth / 2;
 		}
 
-		if (megaman.position.x >= (gameWidth - (screenWidth / 2) - (megaman.texture.width / 6)))
+		if (megaman.position.x >= (gameWidth - (screenWidth / 2) - (megaman.texture.width / 2)))
 		{
-			pontosPositionUpdate = gameWidth - (screenWidth / 2) - (megaman.texture.width / 6) - 575;
+			pontosPositionUpdate = gameWidth - (screenWidth / 2) - (megaman.texture.width / 2) - 575;
 		}
 
 		// mostra a UI
@@ -991,7 +968,11 @@ int gameplay()
             // ele pode pular, aumentando o y.
 			PlaySound(jumpSound);
 			megaman.movement.y = -4 * megaman.speed + megaman.gravity;
-			DrawTextureRec(megaman.texture, megaman.frameRec, megaman.position, WHITE);
+			DrawTexture(
+				megaman.texture,
+				megaman.position.x,
+                megaman.position.y,
+				WHITE);
 			isMegamanJumping = true;
 		}
 
@@ -1000,20 +981,12 @@ int gameplay()
 		{
 			correcaoTiro = 130;
 			isMegamanJumping = false;
-			DrawTextureRec(
+			DrawTexture(
 				megaman.texture,
-				megaman.frameRec,
-				megaman.position,
+				megaman.position.x,
+                megaman.position.y,
 				WHITE);
 			megaman.movement.x = -megaman.speed;
-			if (megaman.frameRec.width > 0)
-				megaman.frameRec.width = -megaman.frameRec.width;
-			frameDelayCounter++;
-			if (frameDelayCounter >= frameDelay)
-			{
-				megaman.frameRec.x += megaman.width;
-				frameDelayCounter = 0;
-			}
 		}
 
         // movimentação para direita
@@ -1021,52 +994,46 @@ int gameplay()
 		{
 			correcaoTiro = -30;
 			isMegamanJumping = false;
-			DrawTextureRec(megaman.texture, megaman.frameRec, megaman.position, WHITE);
+			DrawTexture(
+				megaman.texture,
+				megaman.position.x,
+                megaman.position.y,
+				WHITE);
 			megaman.movement.x = megaman.speed;
-			if (megaman.frameRec.width < 0)
-				megaman.frameRec.width = -megaman.frameRec.width;
-			frameDelayCounter++;
-			if (frameDelayCounter >= frameDelay)
-			{
-				megaman.frameRec.x += megaman.width;
-				frameDelayCounter = 0;
-			}
 		}
 
 		else if (isColliding)
 		{
 			isMegamanJumping = false;
-			DrawTextureRec(
+			DrawTexture(
 				megaman.texture,
-				megaman.frameRec,
-				megaman.position,
+				megaman.position.x,
+                megaman.position.y,
 				WHITE);
 			megaman.movement.x = 0;
-			if (megaman.frameRec.width > 0)
-				megaman.frameRec.width = +megaman.frameRec.width;
 		}
 
 		else
 		{
 			isMegamanJumping = true;
-			DrawTextureRec(
+			DrawTexture(
 				megaman.texture,
-				megaman.frameRec,
-				megaman.position,
+				megaman.position.x,
+                megaman.position.y,
 				WHITE);
 		}
 
 		megaman.position = Vector2Add(megaman.position, megaman.movement);
 		megaman.movement.y += megaman.gravity;
 
-		if (megaman.position.x < xStartingPosition - (megaman.texture.width / 6))
+		if (megaman.position.x < xStartingPosition - (megaman.texture.width / 2))
 		{
-			megaman.position.x = xStartingPosition - (megaman.texture.width / 6);
+			megaman.position.x = xStartingPosition - (megaman.texture.width / 2);
 		}
 
-		if (megaman.position.x > gameWidth - (megaman.texture.width / 3))
+		if (megaman.position.x > gameWidth - (megaman.texture.width))
 		{
-			megaman.position.x = gameWidth - (megaman.texture.width / 3);
+			megaman.position.x = gameWidth - (megaman.texture.width);
 		}
 
 		// desenho das bombas
@@ -1075,21 +1042,25 @@ int gameplay()
 			bomb[0].frameRec,
 			bomb[0].position,
 			WHITE);
+            
 		DrawTextureRec(
 			bomb[1].texture,
 			bomb[1].frameRec,
 			bomb[1].position,
 			WHITE);
+            
 		DrawTextureRec(
 			bomb[2].texture,
 			bomb[2].frameRec,
 			bomb[2].position,
 			WHITE);
+            
 		DrawTextureRec(
 			bomb[3].texture,
 			bomb[3].frameRec,
 			bomb[3].position,
 			WHITE);
+            
 		DrawTextureRec(
 			bomb[4].texture,
 			bomb[4].frameRec,
@@ -1102,8 +1073,6 @@ int gameplay()
 		// se o megaman entrar dentro de um bloco de chão, ele é enviado para o bloco mais acima dele
 		if (bombMovement(&bomb [0], &megaman, &vidas, &deathPosX, &deathPosY) == 0)
         {
-      
-            
 			PlaySound(deathSound);
             megaman.position.x = megaman.position.x - 300;
             bomb[0].position.x = bomb[0].position.x + 300;
@@ -1161,11 +1130,10 @@ int gameplay()
         
         if (vidas == 0)
         {
-
             // se vida chega a 0 ele morre
             break;
         }
-        
+                
         EndDrawing();
 	}
 	CloseAudioDevice();
@@ -1196,6 +1164,7 @@ int main()
 			pontos = gameplay();
 
 			// checagem dos pontos quanto ao leaderboard
+            // e pedido de digitar nome caso entre no ranking
 			if (pontos > leaderboard[0].pontuacao)
 			{
 				leaderboard[4] = leaderboard[3];
@@ -1209,6 +1178,7 @@ int main()
 
 				binaryFileSave(leaderboard);
 			}
+            
 			else if (pontos > leaderboard[1].pontuacao)
 			{
 				strcpy(tempNomeJog, leaderboard[0].nomeJog);
@@ -1225,6 +1195,7 @@ int main()
 
 				binaryFileSave(leaderboard);
 			}
+            
 			else if (pontos > leaderboard[2].pontuacao)
 			{
 				strcpy(tempNomeJog, leaderboard[0].nomeJog);
@@ -1240,6 +1211,7 @@ int main()
 
 				binaryFileSave(leaderboard);
 			}
+            
 			else if (pontos > leaderboard[3].pontuacao)
 			{
 				strcpy(tempNomeJog, leaderboard[0].nomeJog);
@@ -1254,6 +1226,7 @@ int main()
 
 				binaryFileSave(leaderboard);
 			}
+            
 			else if (pontos > leaderboard[4].pontuacao)
 			{
 				strcpy(tempNomeJog, leaderboard[0].nomeJog);
